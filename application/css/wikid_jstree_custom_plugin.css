@@ -1,0 +1,21 @@
+#menu_tree{
+	background-color:transparent;
+	font-family:Tahoma, Verdana, Arial, sans-serif;
+	line-heigt:2.0;
+	float:left;
+}
+#menu_tree ul{
+	font-size:28;
+	font-weight:bold;
+}
+#menu_tree ul li{
+	margin:3px;
+	padding:3px;
+}
+#menu_tree ul li ul li{
+	padding: 2px;
+	font-size:20;
+	font-style:italic;
+	font_weight:normal;
+	text-color: #FFE;
+}

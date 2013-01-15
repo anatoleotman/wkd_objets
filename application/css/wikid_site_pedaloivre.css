@@ -1,0 +1,254 @@
+@font-face{
+	fontFamily: Arvo;
+	src:url(/fonts/arvo/Arvo-Regular.ttf) format("truetype");
+}
+@font-face{
+	/* src:url(<?=parse_url($base_url, PHP_URL_PATH);
+	?>application/css/fonts/arvo/Arvo-Bold.ttf);
+	*/
+	src:url(/fonts/arvo/Arvo-Bold);
+	fontFamily: Arvo;
+	fontWeight: bold;
+}
+@font-face{
+	/* src:url(<?=parse_url($base_url, PHP_URL_PATH);
+	?>application/css/fonts/arvo/Arvo-Italic.ttf);
+	*/
+	src:url(/fonts/arvo/Arvo-Italic);
+	fontFamily: Arvo;
+	fontStyle: italic;
+}
+html{
+	
+}
+html, body{
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	height:100%;
+	background: rgb(255,255,255);
+	/* Old browsers */
+	
+	background: -moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+	/* FF3.6+ */
+	
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(47%,rgba(246,246,246,1)), color-stop(100%,rgba(237,237,237,1)));
+	/* Chrome,Safari4+ */
+	
+	background: -webkit-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+	/* Chrome10+,Safari5.1+ */
+	
+	background: -o-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+	/* Opera 11.10+ */
+	
+	background: -ms-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+	/* IE10+ */
+	
+	background: linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+	/* W3C */
+	
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=1 );
+	/* IE6-9 fallback on horizontal gradient */
+}
+body{
+	/*ne pas remplir ici CKEDITOR a son propre body
+	utiliser à la place #body_principal */
+}
+#body_principal{
+	overflow-x: hidden;
+	height:100%;
+}
+.nojs{
+	background-color: #F3F3F3;
+}
+
+
+#wrapper{
+	position:relative;
+	width: 1268px;
+	height: 1500px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+}
+#header_cadre{
+	position: absolute;
+	height:86px;
+	left:4px;
+	top:693px;
+	width:179px;
+}
+#header{
+	width: 100%;
+	height: 100%;
+	background-color: rgba( 255, 255, 255, 0.3);
+	overflow: hidden;
+	border: 1px solid #888;
+}
+#page_cadre{
+	height:743px;
+	left:338px;
+	overflow:visible;
+	position:absolute;
+	top:150px;
+	width:910px;
+}
+#page{
+	width: 100%;
+	height: 100%;
+	background-color: rgba( 255, 255, 255, 0.45);
+	overflow: visible;
+	/*border: 1px solid #888;
+	*/
+	font-family: Arvo, serif;
+}
+#footer_cadre{
+	position: absolute;
+	height:226px;
+	left:4px;
+	top:463px;
+	width:135px;
+}
+#footer{
+	width: 100%;
+	height: 100%;
+	background-color: rgba( 255, 255, 255, 0.3);
+	overflow: hidden;
+	border: 1px solid #888;
+}
+
+
+#page table td, th{
+	background-color: rgba( 255, 255, 255, 0.7)
+}
+#page table.table_translucide td, th{
+	background-color: rgba( 255, 255, 255, 0.7)
+}
+
+big img{
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-moz-box-shadow: 5px 5px 5px black;
+	-webkit-box-shadow: 5px 5px 5px black;
+	box-shadow: 5px 5px 5px black;
+}
+
+shadows img{
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-moz-box-shadow: 5px 5px 5px black;
+	-webkit-box-shadow: 5px 5px 5px black;
+	box-shadow: 5px 5px 5px black;
+}
+h1{
+	font-size: 16px;
+	font-family: Arvo, serif;
+}
+h2{
+	font-size: 14px;
+	font-family: Arvo, serif;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+p{
+	font-size: 13px;
+	font-family: Arvo, serif;
+}
+
+#menu_cadre{
+	position: absolute;
+	top: 10px;
+	left: 537px;
+	overflow: none;
+	width: 700px;
+	height: 40px;
+}
+#menu{
+	position: relative;
+	height: 100%;
+}
+ul#menu_liste{
+	position: absolute;
+	height:100%;
+	list-style:none;
+	overflow: visible;
+	margin: 0;
+	padding: 0;
+	background-color:transparent;
+	font-family: Arial, serif;
+}
+ul#menu_liste li{
+	margin:3px 5px;
+	display:inline-block;
+	line-height:0;
+}
+ul#menu_liste li a{
+	margin: 0px 20px;
+	padding: 6px 23px 7px 22px;
+	position: relative;
+	color:#333;
+	background-color: rgba( 0, 0, 0, 0.05);
+	text-decoration:none;
+	font-size:17px;
+	outline:none;
+	border: 1px solid #888;
+}
+.categorie ul{
+	padding: 0;
+	list-style: none;
+	width:450px;
+	margin-top: 8px;
+	position: absolute;
+}
+.nojs .categorie ul li{
+	display: block!important;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.categorie ul li{
+	/*display: block!important;
+	*/ margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.categorie ul li a{
+	background-color: transparent!important;
+	font-family:Arvo, sans-serif;
+	font-size: 15px;
+	font-weight: normal;
+	padding:3px 23px 5px 20px;
+	border: none!important;
+	display:table!important;
+	overflow:visible;
+}
+ul#menu_liste li a:hover{
+	color:#FFF;
+}
+#sommaire_collection_accueil ul li{
+	display: block!important;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#login_wrapper{
+	position: relative;
+	top: 100%;
+}
+
+#upload_wrapper{
+	position: relative;
+	top: 100%;
+}
+
+.bouton_wikid{
+	width: 50%;
+	position: relative;
+}
+
