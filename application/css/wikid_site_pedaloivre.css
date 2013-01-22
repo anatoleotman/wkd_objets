@@ -1,23 +1,18 @@
-@font-face{
+/*@font-face{
 	fontFamily: Arvo;
 	src:url(/fonts/arvo/Arvo-Regular.ttf) format("truetype");
 }
 @font-face{
-	/* src:url(<?=parse_url($base_url, PHP_URL_PATH);
-	?>application/css/fonts/arvo/Arvo-Bold.ttf);
-	*/
 	src:url(/fonts/arvo/Arvo-Bold);
 	fontFamily: Arvo;
 	fontWeight: bold;
 }
 @font-face{
-	/* src:url(<?=parse_url($base_url, PHP_URL_PATH);
-	?>application/css/fonts/arvo/Arvo-Italic.ttf);
-	*/
 	src:url(/fonts/arvo/Arvo-Italic);
 	fontFamily: Arvo;
 	fontStyle: italic;
 }
+*/
 html{
 	
 }
@@ -26,29 +21,6 @@ html, body{
 	padding: 0px;
 	border: 0px;
 	height:100%;
-	background: rgb(255,255,255);
-	/* Old browsers */
-	
-	background: -moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
-	/* FF3.6+ */
-	
-	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(47%,rgba(246,246,246,1)), color-stop(100%,rgba(237,237,237,1)));
-	/* Chrome,Safari4+ */
-	
-	background: -webkit-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
-	/* Chrome10+,Safari5.1+ */
-	
-	background: -o-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
-	/* Opera 11.10+ */
-	
-	background: -ms-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
-	/* IE10+ */
-	
-	background: linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
-	/* W3C */
-	
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=1 );
-	/* IE6-9 fallback on horizontal gradient */
 }
 body{
 	/*ne pas remplir ici CKEDITOR a son propre body
@@ -57,6 +29,9 @@ body{
 #body_principal{
 	overflow-x: hidden;
 	height:100%;
+	font-family:sans-serif;
+	font-size:1.35rem;
+    	line-height:1.5;
 }
 .nojs{
 	background-color: #F3F3F3;
@@ -101,7 +76,6 @@ body{
 	overflow: visible;
 	/*border: 1px solid #888;
 	*/
-	font-family: Arvo, serif;
 }
 #footer_cadre{
 	position: absolute;
@@ -143,11 +117,9 @@ shadows img{
 }
 h1{
 	font-size: 16px;
-	font-family: Arvo, serif;
 }
 h2{
 	font-size: 14px;
-	font-family: Arvo, serif;
 }
 
 a {
@@ -156,7 +128,6 @@ a {
 }
 p{
 	font-size: 13px;
-	font-family: Arvo, serif;
 }
 
 #menu_cadre{
@@ -179,7 +150,6 @@ ul#menu_liste{
 	margin: 0;
 	padding: 0;
 	background-color:transparent;
-	font-family: Arial, serif;
 }
 ul#menu_liste li{
 	margin:3px 5px;
@@ -219,7 +189,6 @@ ul#menu_liste li a{
 
 .categorie ul li a{
 	background-color: transparent!important;
-	font-family:Arvo, sans-serif;
 	font-size: 15px;
 	font-weight: normal;
 	padding:3px 23px 5px 20px;
@@ -230,11 +199,27 @@ ul#menu_liste li a{
 ul#menu_liste li a:hover{
 	color:#FFF;
 }
-#sommaire_collection_accueil ul li{
-	display: block!important;
-	margin: 0;
-	padding: 0;
+#sommaire_collection_ul {
+	height: 100%;
+}
+
+#sommaire_collection_ul li{
+	display: block;
+}
+
+.sommaire_collection ul li a{
+	border-bottom:medium none;
+	    font-size:1.1rem;
+	    margin:0;
+	    padding:10px 20px;
+	    text-align:left;
+}
+
+  
+.sommaire_collection{
 	list-style: none;
+    	width:212px;
+
 }
 
 #login_wrapper{

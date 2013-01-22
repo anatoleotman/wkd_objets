@@ -9,7 +9,7 @@ class Collection_objets extends CI_Controller {
 		$this->load->model('Collection_objets_model','', TRUE);
 		$this->load->helper('date');
 		$this->load->helper('html');
-		//$this->load->helper('regex_wikid');
+		$this->load->helper('regex_wikid');
 	}
 	
 	private function _security_check_logged_in_or_exit () {
@@ -40,7 +40,8 @@ class Collection_objets extends CI_Controller {
 		$bool_already_exists = $this->Collection_objets_model->bool_check_if_obj_title_already_exists($collection_nom, $new_obj_titre);
 		$out['success'] = ($bool_already_exists) ? false : true;
 		$out['new_obj_titre'] = $new_obj_titre;
-		
+		$out['new_obj_url_index'] = url_normalize_str($new_obj_titre);
+		$out['collection_page_nom'] = $collection_nom;
 		echo json_encode($out);
 	}
 	

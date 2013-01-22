@@ -31,9 +31,8 @@ class Pages extends CI_Controller {
 		// la pages est elle une collection d'objets'
 			if (((boolean) $page['bool_collection_objets'])) {
 				$sommaire_collection_objets_serialized = $this->Collection_objets_model->get_collection_sommaire_ul($page['nom']);
-			
-				//$table_sommaire_collection_objets = $this->table->generate($collection_objets_array);
-				$sommaire_collection_objets = $sommaire_collection_objets_serialized['collection_sommaire_ul'];
+			// si le sommaire n'existe pas, c'est une nouvelle collection d'objets'	
+				$sommaire_collection_objets = (!empty($sommaire_collection_objets_serialized)) ? $sommaire_collection_objets_serialized['collection_sommaire_ul'] : null;
 				$data_sommmaire_collection_objets_view = array(
 						'collection_id' => $page['nom'],
 						'collection_sommaire' => $sommaire_collection_objets,

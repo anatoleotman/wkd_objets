@@ -79,10 +79,10 @@ class Sync extends CI_Controller {
 			
 			if (isset($objet_nom)) {
 				$objet_array = $this->Collection_objets_model->get_object_from_collection($page['nom'], $objet_nom);
-				if(!count($objet_array)) {
+				if(!empty($objet_array)) {
 					$objet_array = $this->Collection_objets_model->get_object_from_collection($page['nom'], $objet_nom);
 					$objet_data = array(
-						'objet_nom_page_sommaire' => $page['nom'],
+						'objets_nom_page_sommaire' => $page['nom'],
 						'objet_data' => $objet_array
 						);
 						$objet_view = $this->load->view('single_objet_view', $objet_data, true);

@@ -14,6 +14,13 @@
 			this._init_hashchange_plugin();
 			this._make_document_links_ajax();
 			this.display_url_base_hash();
+		//	console.info(this.$elem_hidden_page_name);
+			this.$elem.find('#sommaire_collection_' + this.$elem_hidden_page_name.val()).accordion({
+				initShow: '#current',
+				activeLink: true,
+				expandSub : true
+			});
+			//this.$elem.find('.sommaire_collection').accordion();
 			return this;
 		},
 		
@@ -168,53 +175,74 @@
 					alert('Erreur durant le chargement !');
 				},
 				success: function (ans) {
-					var that = this;
-					this.$elem_contenu_wikid.hide("slide", { direction: 'down'}, "easeOutQuint", function() {
-				  	 	$(this).empty();
-						$(this).html(ans.page_contenu);
-						$(this).find('button').button();
-						that.ajax_form_new_object($(this).find('#new_object_form'));
-					// c'est la clé pour le plugin mode edit
-						$(this).data('page_nom', ans.page_nom); 
-						$(this).next('input[name="page_name"]').val(ans.page_nom); 
-						//that._images_display_each_element(this); // affiche la page et ses images une par une
-						$(this).show("slide", {}, "easeOutQuint", function () {
+					if (ans === null) {
+						alert("la page demandée n'existe pas");
+					}
+					else {
+						var that = this;
+						this.$elem_contenu_wikid.hide("slide", { direction: 'down'}, "easeOutQuint", function() {
+					  	 	$(this).empty();
+							$(this).html(ans.page_contenu);
+						
+						// c'est la clé pour le plugin mode edit
+							$(this).data('page_nom', ans.page_nom); 
+							$(this).next('input[name="page_name"]').val(ans.page_nom); 
+							//that._images_display_each_element(this); // affiche la page et ses images une par une
+						// on prépare la nouvelle page avant de l'afficher'
+							$(this).find('button').button();
+							//console.info(ans.page_nom);
+							//console.info($(this).find('#sommaire_collection_' + ans.page_nom));
+							$(this).find('#sommaire_collection_' + ans.page_nom).accordion({
+								initShow: '#current',
+								activeLink: true,
+								expandSub : true
+							});
+							that.ajax_form_new_object($(this).find('#new_object_form'));
+							$(this).show("slide", {}, "easeOutQuint", function () {
 							
+							});
 						});
-					});
+					}
 				},
 				complete: function () {
 					this.$elem_wrapper.spin(false);
+					
 				}		
 			});
 		},
 		
 		ajax_form_new_object: function ($elem_form) {
-			$elem_form.ajaxForm({
-				target: $elem_form.find('p'),
-				//type: 'POST',
-				context: this,
-				dataType: 'json',
-				beforeSend: function () {
-					console.info(this);
-					this.$elem.spin();
-				},
-				error: function () {
-					alert('erreur serveur / reessayer');
-				},
-				success: function (ans) {
-					if (ans.success) {
-						console.info(ans.new_obj_titre);
-					}
-					else {
-						alert('cette fiche existe déjà');
-					}
-				},
-				complete: function () {
-					this.$elem.spin(false);
-					// this.options.on_update_callback.call()
+			$elem_form.validate({
+				submitHandler: function (form) {
+					$(form).ajaxSubmit({
+						target: $(form).find('p'),
+						//type: 'POST',
+						context: form,
+						dataType: 'json',
+						beforeSend: function () {
+							$(this).spin();
+						},
+						error: function () {
+							alert('erreur serveur / reessayer');
+						},
+						success: function (ans) {
+							if (ans.success) {
+								window.location.hash = ans.collection_page_nom + '/' + ans.new_obj_url_index;
+							}
+							else {
+								alert('cette fiche existe déjà');
+							}
+						},
+						complete: function () {
+							$(this).spin(false);
+							// this.options.on_update_callback.call()
+						}
+					});
 				}
 			});
+			
+			
+			
 		},
 		
 		_images_display_each_element: function (elem) { // afficher images une par une

@@ -4,7 +4,7 @@
 	<br>
 	<p id='new_object_tips'> choississez un titre à votre nouvel objet</p>
 	</br>
-	<input type="text" name="titre_new_object" value="">
+	<input type="text" name="titre_new_object" value="" class="required">
 	<button type="submit" name="save_new_object">
 		Ajouter
    	</button>

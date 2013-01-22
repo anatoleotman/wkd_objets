@@ -21,20 +21,29 @@
 			on_refresh_callback : function () {}
 		},
 		
-		_build_valid_tree_button: function () {
-			var $bouton_edit_mode = $('<button>', {
-					id: 'bouton_valide_sommaire',
-					value: 'valide Sommaire',
-					class: 'bouton_valide_sommaire'
-				})	
-				.button()
-				.css({
-					'background': 'none', 
-					'background-color': this.string_couleur_target_rgba,
-					'z-index': 2
-				});
+		_build_valid_tree_button: function (tree_elem) {
+//			var $bouton_edit_mode = $('<button>', {
+//					id: 'bouton_valide_sommaire',
+//					value: 'valide Sommaire',
+//					class: 'bouton_valide_sommaire'
+//				})	
+//				.button()
+//				.css({
+//					'background': 'none', 
+//					'background-color': this.string_couleur_target_rgba,
+//					'z-index': 2
+//				});
+			this.$add_folder_bouton = $('<button>', {
+				id: 'add_folder_bouton',
+				value: 'Ajouter une catégorie'
+			})
+			.button()
+			.insertBefore('#bouton_sommaire_collection');
 			this.$elem.find('#bouton_sommaire_collection').html('Sauver sommaire');
 			this.$elem.one('click.sommaire_jstree_mode', '#bouton_sommaire_collection', $.proxy(this.handler_valide_sommaire_jstree, this));
+			this.$elem.on('click.sommaire_jstree_mode', '#add_folder_bouton', function () {
+				$(tree_elem).jstree("create", null, "after", { "attr" : { "rel" : "categorie" }});
+			});
 			return this;
 		},
 
@@ -42,24 +51,63 @@
 			// il faudra commencer par désactiver les liens cliquables
 			//this._build_valid_tree_button();
 			var that = this;
-			this.$elem.find('.sommaire_collection').bind("move_node.jstree", function (e, data) {
+			this.$elem
+				.find('.sommaire_collection')
+				.bind("move_node.jstree", function (e, data) {
 				//console.info(data.rslt.o);
-			}).bind("loaded.jstree", function (e, data) {
-				$(this).jstree("open_all", -1, true);
-				that._build_valid_tree_button();
-			})
+				})
+				.bind("loaded.jstree", function (e, data) {
+					$(this).jstree("open_all", -1, true);
+					that._build_valid_tree_button(this);
+				})
+				.bind("create.jstree", function (e, data) {
+					console.info(data.rslt.obj);
+					console.info(data.rslt.obj.find('a').attr('href'));
+				// on test attribut rel pour savoir si ce noeud est une categorie
+					if (data.rslt.obj.attr('rel') === 'categorie') {
+						data.rslt.obj.find('a').removeAttr('href');
+					}
+				})
 			.jstree({
 				"ui": {
 					"select_limit": -1,
 					"initially_select": []
 				},
 				"core": {},
-				"themes": {
-					"theme": "default",
-					"dots": false,
-					"icons": true
-				},
+//				"themes": {
+//					"theme": "default",
+//					"dots": true	,
+//					"icons": true
+//				},
 				"html_data": {},
+				"types": {
+					"max_children"	: -2,
+					"max_depth"	: -2,
+					"valid_children": [ "categorie" ],
+					"types": {
+					// the default type
+						"default": {
+							"valid_children": "none",
+							// Bound functions - you can bind any other function here (using boolean or function)
+							//"select_node"	: true,
+							//"open_node"	: true,
+							//"close_node"	: true,
+							"icon" : { 
+								"image" : WIKIDGLOBALS.BASE_URL + "application/views/js//images/file.png"
+							},
+																										//"delete_node"	: true
+						},
+						"categorie": {
+							"max_children"	: -1,
+							"max_depth"	: -1,
+							"valid_children": ["default","categorie"],
+							"icon" : { 
+								"image" : WIKIDGLOBALS.BASE_URL + "application/views/js//images/folder.png"
+							}
+						}
+						
+					}
+				},
 				"contextmenu": {
 					"items": {
 						/*
@@ -69,21 +117,20 @@
 								console.info(this._get_parent(obj));
 							}
 						},
-						*/
 						"create": {
 							"label": "Creer un noeud",
 							"action": function (obj) {
 								this.create(obj, "after");
 							}
 						},
-						
+						*/
 						"lien vers": {
 							label: "Modifier le lien",
 							action: function (obj) {
 								var that = this;
 								var $lien = obj.children('a');
 								this.close_node(obj);
-								var obj_closure = obj;
+								//var obj_closure = obj;
 								
 								var $input = $('<input>', {
 									value: $lien.attr('href').split('#')[1]
@@ -119,43 +166,20 @@
 					}
 				},
 				"crrm": {
-					"move": {
-						"check_move": function (move_object) {
-							var p = this._get_parent(move_object.cr);
-							var pp = move_object.cr;
-							var child = this._get_children(move_object.o);
-							//console.info(child.length);
-							if (p === -1 && child.length === 0) {return true};
-							if (pp === -1) {return true};
-						}
-					}
+//					"move": {
+//						"check_move": function (move_object) {
+//							var p = this._get_parent(move_object.cr);
+//							var pp = move_object.cr;
+//							var child = this._get_children(move_object.o);
+//							//console.info(child.length);
+//							if (p === -1 && child.length === 0) {return true};
+//							if (pp === -1) {return true};
+//						}
+//					}
 				},
-				"types": {
-					"valid_children": [ "default" ],
-					"types": {
-					// the default type
-						"default" : {
-							"max_children"	: -1,
-							"max_depth"	: -1,
-							"valid_children": "all",
-							"icon" : {
-								"image" : "http://static.jstree.com/v.1.0rc/_docs/_drive.png"
-							},
-							// Bound functions - you can bind any other function here (using boolean or function)
-							//"select_node"	: true,
-							//"open_node"	: true,
-							//"close_node"	: true,
-							"create_node": function (node) {
-								console.info('initnode');
-								console.info(node);
-								return true;
-							}
-							//"delete_node"	: true
-						}
-					}
-				},
+				
 
-				"plugins": ["themes", "html_data", "ui", "crrm", "dnd", "contextmenu", "types"]
+				"plugins": ["themeroller", "html_data", "ui", "crrm", "dnd", "contextmenu", "types"]
 			});
 		},
 		
@@ -164,6 +188,9 @@
 			//var that = this;
 			this.$elem.find('.sommaire_collection.jstree').jstree('destroy');
 			this.$elem.find('.sommaire_collection > ul').find('ins').remove();
+			this.$elem.find('.sommaire_collection > ul').find('li').removeAttr('id style').removeClass();
+			this.$elem.find('.sommaire_collection > ul').find('ul').removeAttr('style').removeClass();
+			this.$elem.find('.sommaire_collection > ul').find('a').removeClass('trigger active open');
 			$.ajax({
 				url: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/user_valide_collection_obj_sommaire/",
 				type: "POST",
@@ -179,11 +206,17 @@
 				dataType: "json",
 				context: this,
 				success: function (ans) {
-					
+					this.$elem.find('#sommaire_collection_' + ans.page_nom).accordion({
+								initShow: '#current',
+								activeLink: true,
+								expandSub : true
+					});
 				},
 				complete: function () {
 					this.eventify();
-					this.$elem.find('#bouton_sommaire_collection').html('Modifier sommaire');		
+					this.$elem.find('#bouton_sommaire_collection').html('Modifier sommaire');
+					this.$elem.find('#add_folder_bouton').remove();
+					
 				}
 			});
 			$('#wrapper').off('click.sommaire_jstree_mode', 'a');
