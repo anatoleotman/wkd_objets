@@ -41,15 +41,7 @@ class Pages extends CI_Controller {
 				$page['contenu'] .= $this->load->view('sommmaire_collection_objets_view', $data_sommmaire_collection_objets_view, true);
 			
 				if (isset($objet_nom)) {
-					if ($objet_nom == 'new') {
-						$this->_security_check_logged_in_or_exit();
-						$data = array(
-							'objets_nom_page_sommaire' => $page['nom']
-						);
-						$page['contenu'] .= $this->load->view('new_object_view', $data, true);
-					}
-					else {
-						$objet_array = $this->Collection_objets_model->get_object_from_collection($page['nom'], $objet_nom);
+					$objet_array = $this->Collection_objets_model->get_object_from_collection($page['nom'], $objet_nom);
 						// si objet existe
 						if(!empty($objet_array)) {
 							$objet_data = array(
@@ -69,7 +61,7 @@ class Pages extends CI_Controller {
 							);
 							$objet_view = $this->load->view('single_objet_view', $objet_data, true);
 							$page['contenu'] .= $objet_view;
-						}
+						
 					}
 				}
 				else {

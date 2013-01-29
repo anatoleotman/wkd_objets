@@ -61,7 +61,7 @@
 		},
 		
 		_objets_display: function (objets_titre) { // afficher une catégorie d'objets ou le titre d'un objet
-			//var that = this;
+			var that = this;
 			$.ajax({
 				url : WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/display_objet/" + this.$elem_contenu_wikid.data('page_nom') + "/" + objets_titre,
 				type : "GET",
@@ -107,7 +107,6 @@
 				},
 				complete: function () {
 					this.$elem_wrapper.spin(false);
-					this.ajax_form_new_object(this.$elem);
 				}		
 			});
 		},
@@ -138,6 +137,13 @@
 			});
 		// pour les liens du sommaire collection objet
 			this.$elem.on('click', 'a[href*="/show/"].sommaire_collection', function (event) {
+				event.preventDefault(); // Ajax here
+				var titre = lastslash($(this).attr('href'));
+				//var hash_last_slash = lastslash(window.location.hash);
+				window.location.hash = that.$elem_contenu_wikid.data('page_nom') + '/' + titre;
+			});
+			
+			this.$elem.on('click', 'a[href*="/show/"].link_obj_collection', function (event) {
 				event.preventDefault(); // Ajax here
 				var titre = lastslash($(this).attr('href'));
 				//var hash_last_slash = lastslash(window.location.hash);
@@ -189,7 +195,19 @@
 							$(this).next('input[name="page_name"]').val(ans.page_nom); 
 							//that._images_display_each_element(this); // affiche la page et ses images une par une
 						// on prépare la nouvelle page avant de l'afficher'
-							$(this).find('button').button();
+							$(this).find('.buttonset').buttonset().children('button').each(function () {
+								
+								var random_color1 = Math.floor(Math.random()*256);
+						   		var random_color2 = Math.floor(Math.random()*256);
+					   			var random_color3 = Math.floor(Math.random()*256);
+					   			var random_color4 = Math.random()*0.5;
+					   			var string_couleur_target_rgba = 'rgba(' 
+					   					+ random_color1 + ',' 
+					   					+ random_color2 + ',' 
+					   					+ random_color3 + ',' 
+					   					+ random_color4 + ')';
+								$(this).css('background', string_couleur_target_rgba);
+							});
 							//console.info(ans.page_nom);
 							//console.info($(this).find('#sommaire_collection_' + ans.page_nom));
 							$(this).find('#sommaire_collection_' + ans.page_nom).accordion({
@@ -197,7 +215,6 @@
 								activeLink: true,
 								expandSub : true
 							});
-							that.ajax_form_new_object($(this).find('#new_object_form'));
 							$(this).show("slide", {}, "easeOutQuint", function () {
 							
 							});
@@ -209,40 +226,6 @@
 					
 				}		
 			});
-		},
-		
-		ajax_form_new_object: function ($elem_form) {
-			$elem_form.validate({
-				submitHandler: function (form) {
-					$(form).ajaxSubmit({
-						target: $(form).find('p'),
-						//type: 'POST',
-						context: form,
-						dataType: 'json',
-						beforeSend: function () {
-							$(this).spin();
-						},
-						error: function () {
-							alert('erreur serveur / reessayer');
-						},
-						success: function (ans) {
-							if (ans.success) {
-								window.location.hash = ans.collection_page_nom + '/' + ans.new_obj_url_index;
-							}
-							else {
-								alert('cette fiche existe déjà');
-							}
-						},
-						complete: function () {
-							$(this).spin(false);
-							// this.options.on_update_callback.call()
-						}
-					});
-				}
-			});
-			
-			
-			
 		},
 		
 		_images_display_each_element: function (elem) { // afficher images une par une

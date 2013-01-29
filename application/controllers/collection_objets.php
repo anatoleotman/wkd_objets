@@ -37,36 +37,31 @@ class Collection_objets extends CI_Controller {
 		$session_user_data = $this->Users_model->get_session_user_data();
 		$current_user_id = $session_user_data['user_id'];
 		$new_obj_titre = $this->input->post('titre_new_object', true);
-		$bool_already_exists = $this->Collection_objets_model->bool_check_if_obj_title_already_exists($collection_nom, $new_obj_titre);
+		$new_obj_titre = trim($new_obj_titre, ' ');
+		$new_obj_url_index = url_normalize_str($new_obj_titre);
+		$bool_already_exists = $this->Collection_objets_model->bool_check_if_obj_url_index_already_exists($collection_nom, $new_obj_url_index);
+		
+		if (!$bool_already_exists) {
+			$this->Collection_objets_model->add_new_object_to_collection($collection_nom, $new_obj_titre, $new_obj_url_index, $current_user_id);
+		}
+		
 		$out['success'] = ($bool_already_exists) ? false : true;
 		$out['new_obj_titre'] = $new_obj_titre;
-		$out['new_obj_url_index'] = url_normalize_str($new_obj_titre);
+		$out['new_obj_url_index'] = url_normalize_str($new_obj_url_index);
 		$out['collection_page_nom'] = $collection_nom;
 		echo json_encode($out);
 	}
 	
 	public function display_new_object_template ($nom_page_sommaire) {
+	// nouvel objet on charge un template	
 		$this->_security_check_logged_in_or_exit();
 		$data = array(
 				'objets_nom_page_sommaire' => $nom_page_sommaire,
 			);
-			$objets['contenu'] = $this->load->view('new_object_view', $data, true);
-			$out['objet_data'] = array(
-				'titre' => 'nouveau template'
-			);
-			$out['success'] = true;
-			$out['page_nom'] = $nom_page_sommaire;
-			$out['objet_contenu_html'] = $objets['contenu'];
-	
-			echo json_encode($out);
+			$this->load->view('new_object_view', $data);
 	}
 	
 	public function display_objet ($nom_page_sommaire, $objet_titre = null) {
-	// nouvel objet on charge un template
-		if (isset($nom_page_sommaire) and isset ($objet_titre) and $objet_titre == 'new') {
-			$this->display_new_object_template($nom_page_sommaire);
-			exit;
-		}
 	// cas ou l'on demande un objet seulement'
 		if (isset($objet_titre)) {
 			
@@ -98,6 +93,24 @@ class Collection_objets extends CI_Controller {
 		$out['objet_contenu_html'] = $objets['contenu'];
 		
 		echo json_encode($out);
+	}
+	
+	public function display_collection ($nom_page_collection) {
+		$collection_array = $this->Collection_objets_model->get_collection($nom_page_collection);
+		
+		$a_attr = array(
+			'class' => 'link_obj_collection',
+			'rel' => 'link'
+		);
+		foreach ($collection_array as $data) {
+			$links_array[] = anchor("sync/show/".$data['page_nom']."/".$data['url_index'], $data['titre'], $a_attr);
+		}
+		$attributes = array(
+                    'class' => 'collection_list',
+                    'id'    => 'collection_'.$nom_page_collection.'_list'
+                );
+
+		echo ul($links_array, $attributes);
 	}
 	
 	/*

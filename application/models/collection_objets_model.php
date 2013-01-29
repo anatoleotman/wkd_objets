@@ -46,7 +46,7 @@ class Collection_objets_model extends CI_Model {
     	function get_object_from_collection ($collection_page_nom, $objet_titre) {
     		$where_options_array = array(
     			'page_nom' => $collection_page_nom,
-    			'titre' => $objet_titre
+    			'url_index' => $objet_titre
     		);
     		$query = $this->db->from('objets')
   				->where($where_options_array)
@@ -56,10 +56,10 @@ class Collection_objets_model extends CI_Model {
   		return $query->row_array();
     	}
     	
-    	function bool_check_if_obj_title_already_exists ($collection_page_nom, $new_obj_titre) {
+    	function bool_check_if_obj_url_index_already_exists ($collection_page_nom, $new_object_url_index) {
     		$where_options_array = array(
     			'page_nom' => $collection_page_nom,
-    			'titre' => $new_obj_titre
+    			'url_index' => $new_object_url_index
     		);
     		$query = $this->db->from('objets')
   				//->where('page_nom', $collection_page_nom)
@@ -71,6 +71,19 @@ class Collection_objets_model extends CI_Model {
   		$bool = (empty($result_array)) ? false : true;
   		return $bool;
     		
+    	}
+    	
+    	function add_new_object_to_collection ($collection_nom, $new_object_titre, $new_object_url_index, $user_id) {
+		$data = array(
+			'page_nom' => $collection_nom,
+			'initial_index' => $new_object_url_index,
+			'url_index' => $new_object_url_index,
+    			'titre' => $new_object_titre,
+    			'contenu' => '(vide)',
+    			'date' => time(),
+               		'user_id' => $user_id
+		);
+		$this->db->insert('objets', $data); 
     	}
     	
     	function get_collection_categorie ($collection_page_nom, $titre) {
@@ -98,8 +111,15 @@ class Collection_objets_model extends CI_Model {
 		
 	}
     	
-    	function get_list_noms_pages () { // pour feed le autocomplete list lors de la creation d'un lien
-    		$query = $this->db->from('pages')->select('nom')->group_by('nom')->get();
+    	function get_collection ($nom_page) { 
+    		$query = $this
+    			->db
+    			->from('objets')
+    			->group_by('initial_index')
+    			->where('page_nom', $nom_page)
+    			->select('*')
+    			->select_max('date')
+    			->get();
     		return $query->result_array();
     	}
     	

@@ -1,18 +1,18 @@
-#menu_tree{
+#menu_tree {
 	background-color:transparent;
 	font-family:Tahoma, Verdana, Arial, sans-serif;
 	line-heigt:2.0;
 	float:left;
 }
-#menu_tree ul{
+#menu_tree ul {
 	font-size:28;
 	font-weight:bold;
 }
-#menu_tree ul li{
+#menu_tree ul li {
 	margin:3px;
 	padding:3px;
 }
-#menu_tree ul li ul li{
+#menu_tree ul li ul li {
 	padding: 2px;
 	font-size:20;
 	font-style:italic;
@@ -20,3 +20,78 @@
 	text-color: #FFE;
 }
 
+
+#sommaire_collection_ul {
+	list-style: none;
+	width: 38%;
+}
+
+
+#sommaire_collection_ul li{
+	display: block;
+}
+#sommaire_collection_ul li a {
+	border-bottom:medium none;
+	border:1px solid #EBEBEB;
+	border-radius:5px 5px 5px 5px;
+	font-family:"Maven Pro",sans-serif;
+	padding:5px 10px;
+	font-size:1.0rem;
+	line-height:1.0;
+	text-align:right;
+}
+#sommaire_collection_ul li a:hover {
+	background: #F7F7F7;
+}
+
+#sommaire_collection_ul li a.open {
+	background: #F7F7F7;
+	font-weight:bold;
+	background: #F7F7F7;
+
+}
+
+#sommaire_collection_ul.accordion > li > a {
+	border-bottom:medium none;
+    	font-size:1.9rem;
+    	margin:0;
+    	padding:15px 25px;
+    	text-align:left;
+	border:1px solid #EBEBEB;
+	border-radius:5px 5px 5px 5px;
+	font-family:"Maven Pro",sans-serif;
+}
+#sommaire_collection_ul.accordion > li > a.open {
+	text-align:right;
+	font-weight:bold;
+	color: black;
+	font-family:"Maven Pro",sans-serif;
+	background: #F7F7F7;
+}
+
+#sommaire_collection_ul.accordion > li > ul > li > a {
+	border-top:medium none;
+	font-size:1.2rem;
+	line-height:1.2;
+	margin-left:20px;
+	padding:10px 20px;
+	text-align:right;
+	border:1px solid #EBEBEB;
+	border-radius:5px 5px 5px 5px;
+	font-family:"Maven Pro",sans-serif;
+}
+#sommaire_collection_ul.accordion > li > ul > li > a.open {
+	background: #F7F7F7;
+	font-weight:bold;
+	color: black;
+	font-family:"Maven Pro",sans-serif;
+}
+
+.jstree ul > li > ul li {
+	margin-left:60px!important;
+}
+
+.jstree a {
+	padding:10px 20px!important;
+	
+}

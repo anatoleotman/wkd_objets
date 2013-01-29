@@ -102,8 +102,8 @@
 			var that = this;
 			this.$elem_form_dialog.dialog({
 				autoOpen: false,
-				height: 300,
-				width: 350,
+				height: 369.5,
+				width: 508.5,
 				modal: true,
 				buttons: {
 					"Login": function() {
