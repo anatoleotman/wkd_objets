@@ -9,7 +9,7 @@ $(document).ready(function() {
 			//canvas_back.images_build_canvas_on_mouse_over(this);
 		}	
 	});
-	var plugin_navigation_wikid = $('#page_cadre').data('wikid_navigation'); 
+	var plugin_navigation_wikid = $('#page_cadre').data('wikid_objets_navigation'); 
 	// si besoin d'appeler des methodes de cet objet depuis le $(document).ready(function()
 	//plugin_navigation_wikid.display_url_base_hash();
 	
@@ -27,11 +27,12 @@ $(document).ready(function() {
 		$(document).wikid_upload_menu();
 		
 		// edit mode avec ckeditor3
-		$('.wrapper_wikidable').wikid_edit_mode_wrapper({
+		$('.wrapper_wikidable').wikid_inline_edit_mode_wrapper({
 	
-			on_update_callback: function (id, nom, largeur, hauteur) { 
+			on_update_callback: function (page_nom) { 
 				// arguments fournis depuis l'intérieur de l'objet grâce à function.apply()'
-				//plugin_navigation_wikid.display_resize_ajax(id, nom, largeur, hauteur);
+				plugin_navigation_wikid.display_ajax(page_nom);
+				console.info(page_nom);
 			}
 		});
 		

@@ -106,7 +106,7 @@
 				width: 508.5,
 				modal: true,
 				buttons: {
-					"Login": function() {
+					"Login": function () {
 						var bValid = true;
 						that.$elem_allFields.removeClass( "ui-state-error" );
 

@@ -7,6 +7,7 @@ class Collection_objets extends CI_Controller {
 		parent::__construct();	
 		$this->load->model('Users_model','', TRUE);
 		$this->load->model('Collection_objets_model','', TRUE);
+		$this->load->library('form_validation');
 		$this->load->helper('date');
 		$this->load->helper('html');
 		$this->load->helper('regex_wikid');
@@ -63,6 +64,8 @@ class Collection_objets extends CI_Controller {
 	
 	public function display_objet ($nom_page_sommaire, $objet_titre = null) {
 	// cas ou l'on demande un objet seulement'
+		$logged = false;
+		$logged = $this->Users_model->check_if_logged_in();
 		if (isset($objet_titre)) {
 			
 		}
@@ -71,7 +74,8 @@ class Collection_objets extends CI_Controller {
 			
 			$objet_data = array(
 				'objets_nom_page_sommaire' => $nom_page_sommaire,
-				'objet_data' => $objet_array
+				'objet_data' => $objet_array,
+				'logged' => $logged
 			);
 			$objets['contenu'] = $this->load->view('single_objet_view', $objet_data, true);
 			$out['objet_data'] = $objet_array;
@@ -82,6 +86,7 @@ class Collection_objets extends CI_Controller {
 			$objet_data = array(
 				'objets_nom_page_sommaire' => $nom_page_sommaire,
 				'objet_data' => null,
+				'logged' => false
 			);
 			$objets['contenu'] = $this->load->view('single_objet_view', $objet_data, true);
 			//$out['objet_data'] = null;
@@ -111,6 +116,36 @@ class Collection_objets extends CI_Controller {
                 );
 
 		echo ul($links_array, $attributes);
+	}
+	
+	public function user_save_object () {
+		$this->_security_check_logged_in_or_exit();
+		
+		$session_user_data = $this->Users_model->get_session_user_data();
+		$current_user_id = $session_user_data['user_id'];
+		$this->form_validation->set_rules('titre', 'Titre', 'trim|strip_tags|callback_is_only_whitespaces|required|xss_clean');
+		$this->form_validation->set_rules('contenu', 'Contenu', 'trim|required|xss_clean');
+		if($this->form_validation->run() == FALSE) {
+			$out['validation_message'] = validation_errors();
+			$out['validation_success'] = false;
+		} else {
+			$out['validation_message'] = 'object is OK';
+			$out['validation_success'] = true;
+		}
+		 
+		echo json_encode($out);
+
+		//$saved_sommaire_ul = $this->Collection_objets_model->user_save_collection_sommaire_ul($collection_nom, $sommaire_collection_ul, $current_user_id);
+	}
+	
+	public function is_only_whitespaces ($str) {
+		if (preg_match('/^((?:&nbsp;|\s)+.*?)&nbsp;/', $str)) { // the string is only whitespace
+			$this->form_validation->set_message('is_only_whitespaces', 'le titre ne peut être que des espaces blancs');
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 	/*

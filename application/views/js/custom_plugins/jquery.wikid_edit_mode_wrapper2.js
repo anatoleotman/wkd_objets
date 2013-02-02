@@ -16,7 +16,6 @@
 			this.$elem.addClass('wikid-editable');
 			this._init_page_nom_data();
 			this._code_couleur_init();
-			//this._build_editor_toolbar_dialog();
 			this._events_edit_mode();
 			
 			return this;
@@ -37,49 +36,6 @@
 			return this;
 		},
 		
-		_build_editor_toolbar_dialog: function () {
-			if (document.getElementById('editor_toolbar_dialog')) {
-				return this;
-			} 
-			else {
-				
-				this.editor_toolbar_dialog = $('<div>', {
-					id: 'editor_toolbar_dialog',
-				})
-					.css({ 
-						'padding': '0em 0em'
-					//	'height': 'auto'
-					});
-				
-				var html_string = [
-    					'<div id="topSpace"></div>',
-				].join('');
-				$(this.editor_toolbar_dialog).html(html_string);
-				$('body').append(this.editor_toolbar_dialog);
-				this.$toolbar_dialog = $(this.editor_toolbar_dialog);
-				//plus simple à manipuler
-				this.$toolbar_dialog.dialog({
-					autoOpen: false,
-					height: 'auto',
-					width: 910, 
-					position: ['right', 'top'],
-					resizable: false,
-					open: function (event, ui) {
-						$(this)
-							.dialog('widget')
-							.show('scale')
-							.css('background', 'transparent');
-					},
-					close: function (event, ui) {
-						$(this)
-							.dialog('widget')
-							.hide('scale');
-					}
-				});
-				return this;
-			}
-		},
-		
 		handler_cancel_button: function (event) {
 			// cacher les bouton
 			$(event.currentTarget).button('widget').css('background-color', 'rgba(255, 2, 23, 0.4)');
@@ -89,7 +45,7 @@
 		_events_edit_mode: function () {
 		
 			var contenu_wikidable_elem_ID = this.$elem_contenu_wikid.attr('id');
-			//this.$elem.on('dblclick.edit_mode', '.contenu_wikid', $.proxy(this.handler_edit_mode, this));
+			
 			this.$bouton_edit_mode = $('<button>', {
 				id: 'bouton_edit_mode_'+ contenu_wikidable_elem_ID,
 				value: 'Edit ' + contenu_wikidable_elem_ID,
@@ -194,9 +150,7 @@
 //					//bottom: 'bottomSpace'//pour utiliser resize
 //				}
 			});
-			
 			var editor = this.$wikid_form_textarea.ckeditorGet();
-			//console.info(editor);
 			editor.on('focus', function(e) {
 					//var $local_scope_dialog_ref = $('#editor_toolbar_dialog');
 					//$('.cke_wrapper', $local_scope_dialog_ref).css('background-color', that.string_couleur_target_rgba);

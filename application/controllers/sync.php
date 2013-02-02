@@ -50,6 +50,12 @@ class Sync extends CI_Controller {
 		
 		$page = $this->Pages_model->get_page($nom_page); // la page la plus récente
 		$page = wikid_config_search_replace($page, $this);
+		
+		$data_contenu_ckeditable_view = array(
+			'data' => $page['contenu'],
+			'page_nom' => $page['nom']
+		);
+		$page['contenu'] = $this->load->view('contenu_ckeditable_view', $data_contenu_ckeditable_view, true);
 		$entete = $this->Pages_model->get_page('header');
 		$pied_page = $this->Pages_model->get_page('footer');
 		
@@ -83,7 +89,8 @@ class Sync extends CI_Controller {
 					$objet_array = $this->Collection_objets_model->get_object_from_collection($page['nom'], $objet_nom);
 					$objet_data = array(
 						'objets_nom_page_sommaire' => $page['nom'],
-						'objet_data' => $objet_array
+						'objet_data' => $objet_array,
+						'logged' => $logged
 						);
 						$objet_view = $this->load->view('single_objet_view', $objet_data, true);
 						$out['objet_data'] = $objet_array;		
@@ -94,6 +101,7 @@ class Sync extends CI_Controller {
 				$objet_data = array(
 					'objets_nom_page_sommaire' => $page['nom'],
 					'objet_data' => null,
+					'logged' => $logged
 				);
 				$objet_view = $this->load->view('single_objet_view', $objet_data, true);
 			}

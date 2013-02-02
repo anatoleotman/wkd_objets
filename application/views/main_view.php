@@ -108,7 +108,7 @@ if ($logged) { ?>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/fileupload_plugin/locale.js" ></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.jstree_menu_wikid3.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.upload_menu_wikid0.js"></script>
-<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.wikid_edit_mode_wrapper.js"></script>
+<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.wikid_inline_edit_mode_wrapper.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.sommaires_collections_jstree.js"></script>
 
 

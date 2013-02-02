@@ -48,13 +48,13 @@
 				var complete_hash = ( hash.replace( /^#/, '' ) || that.starting_page_nom);
 				//var nom_page = hash.replace( /^#/, '' );
 				var split_hash = complete_hash.split('/');
-				if (split_hash.length === 1) that._display_ajax(split_hash[0]);
+				if (split_hash.length === 1) that.display_ajax(split_hash[0]);
 				if (split_hash.length === 2) {
 					if (split_hash[0] === that.$elem_contenu_wikid.data('page_nom')) {
 						that._objets_display(split_hash[1]);
 					}
 					else {
-						that._display_ajax(complete_hash);
+						that.display_ajax(complete_hash);
 					}
 				}
 			});
@@ -97,6 +97,7 @@
 					  	 	$(this).html($(ans.objet_contenu_html).children());
 							//$(this).html(ans.objet_contenu_html);
 							$(this).data('objet_nom', ans.objet_data.titre); // c'est la clé pour le plugin mode edit
+							$(this).find('button').button();
 							//that._images_display_each_element(this); // affiche la page et ses images une par une
 							$(this).show("slide", {}, "easeOutQuint");
 						});
@@ -115,7 +116,7 @@
 			var hash = window.location.hash;
 			if (hash != '') { // si hash vide ne fait rien
 				var nom_page = hash.replace( /^#/, '' );
-				this._display_ajax(nom_page);
+				this.display_ajax(nom_page);
 			}
 			return this; // chainable
 		},
@@ -151,7 +152,7 @@
 			});
 		},
 		
-		_display_ajax: function (nom_page) { //nom de la page à afficher (appel de model_getpage())
+		display_ajax: function (nom_page) { //nom de la page à afficher (appel de model_getpage())
 			var that = this;
 			$.ajax({
 				url : WIKIDGLOBALS.BASE_DIRECTORY + "index.php/pages/display_ajax/" + nom_page,
