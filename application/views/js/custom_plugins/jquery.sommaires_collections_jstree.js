@@ -13,7 +13,8 @@
 			this.$elem.addClass('wkd_obj_collec_jstree');
 			this._code_couleur_init()._init_buttons();
 			//this._init_buttons();
-			this.eventify();
+			this.events_sommaire_edit();
+			this.events_object_edit();
 			//return this to chain/use the bridge with less code
 			return this;
 		},
@@ -39,71 +40,25 @@
 			this.string_couleur_target_rgba = 'rgba(' + random_color1 + ',' + random_color2 + ',' + random_color3 + ',' + random_color4 + ')';
 			return this;
 		},
-
-		_build_sommaire_tree_buttons: function () {
-			//			var $bouton_edit_mode = $('<button>', {
-			//					id: 'bouton_valide_sommaire',
-			//					value: 'valide Sommaire',
-			//					class: 'bouton_valide_sommaire'
-			//				})	
-			//				.button()
-			//				.css({
-			//					'background': 'none', 
-			//					'background-color': this.string_couleur_target_rgba,
-			//					'z-index': 2
-			//				});
-			var random_color1 = Math.floor(Math.random() * 256);
-			var random_color2 = Math.floor(Math.random() * 256);
-			var random_color3 = Math.floor(Math.random() * 256);
-			var random_color4 = Math.random() * 0.5;
-			var random_color5 = Math.random() * 0.5;
-			var random_color6 = Math.random() * 0.5;
-			var string_couleur_target_rgba = 'rgba(' + random_color1 + ',' + random_color2 + ',' + random_color3 + ',' + random_color4 + ')';
-			var string_couleur_target_rgba2 = 'rgba(' + random_color1 + ',' + random_color2 + ',' + random_color3 + ',' + random_color5 + ')';
-			var string_couleur_target_rgba3 = 'rgba(' + random_color1 + ',' + random_color2 + ',' + random_color3 + ',' + random_color6 + ')';
-			this.$add_folder_bouton = $('<button>', {
-				id: 'add_folder_bouton',
-				html: 'Ajouter une catégorie',
-				'class': 'sommaire_collection_bouton',
-				style: 'background:' + string_couleur_target_rgba
-			});
-			this.$add_object_bouton = $('<button>', {
-				id: 'bouton_new_object',
-				html: 'Nouveau',
-				'class': 'sommaire_collection_bouton',
-				style: 'background:' + string_couleur_target_rgba2
-			});
-			this.$view_collection_bouton = $('<button>', {
-				id: 'view_collection_bouton',
-				html: 'Voir la liste entière',
-				'class': 'sommaire_collection_bouton',
-				style: 'background:' + string_couleur_target_rgba3
-			});
-
-			// construire les boutons 	
-			$('#buttonset_sommaire_collection').append(this.$add_folder_bouton).append(this.$add_object_bouton).append(this.$view_collection_bouton).buttonset();
-			$('.sommaire_collection_bouton').css('display', 'none');
-
-			// attacher les événements
-			this.$elem.on('click.sommaire_jstree_mode', '#bouton_new_object', $.proxy(this.handler_new_object, this));
-
-
-			this.$elem.on('click.sommaire_jstree_mode', '#add_folder_bouton', $.proxy(this.handler_add_folder, this));
-			this.$elem.one('click.sommaire_jstree_mode', '#view_collection_bouton', $.proxy(this.handler_view_collection, this));
+		
+		events_sommaire_edit: function () { // ajouter le hover pour modifier l'apparence du pointeur et indiquer une action possible'
+			this.$elem.one('click.sommaire_jstree_mode', '#bouton_sommaire_collection', $.proxy(this.handler_sommaire_edit_mode, this));
 
 			return this;
 		},
-
-		handler_add_folder: function () {
-			this.$sommaire_elem.jstree("create", null, "after", {
-				"attr": {
-					"rel": "categorie",
-					"class": "categorie"
-				},
-				"data": "Nouvelle Catégorie"
+		
+		events_object_edit: function () {
+			this.$elem.one('click.sommaire_jstree_mode', '#bouton_edit_objet', $.proxy(this.handler_edit_object, this));
+		},
+		
+		handler_sommaire_edit_mode: function (e) {
+			this._init_sommaire_jstree();
+			$('#wrapper').on('click.sommaire_jstree_mode', 'a', function (event) {
+				event.preventDefault();
+				event.stopPropagation();
 			});
 		},
-
+		
 		_init_sommaire_jstree: function () {
 			// il faudra commencer par désactiver les liens cliquables
 			var that = this;
@@ -246,10 +201,77 @@
 				"plugins": ["themeroller", "html_data", "ui", "crrm", "dnd", "contextmenu", "types"]
 			});
 		},
+		
+		_build_sommaire_tree_buttons: function () {
+			//			var $bouton_edit_mode = $('<button>', {
+			//					id: 'bouton_valide_sommaire',
+			//					value: 'valide Sommaire',
+			//					class: 'bouton_valide_sommaire'
+			//				})	
+			//				.button()
+			//				.css({
+			//					'background': 'none', 
+			//					'background-color': this.string_couleur_target_rgba,
+			//					'z-index': 2
+			//				});
+			var random_color1 = Math.floor(Math.random() * 256);
+			var random_color2 = Math.floor(Math.random() * 256);
+			var random_color3 = Math.floor(Math.random() * 256);
+			var random_color4 = Math.random() * 0.5;
+			var random_color5 = Math.random() * 0.5;
+			var random_color6 = Math.random() * 0.5;
+			var string_couleur_target_rgba = 'rgba(' + random_color1 + ',' + random_color2 + ',' + random_color3 + ',' + random_color4 + ')';
+			var string_couleur_target_rgba2 = 'rgba(' + random_color1 + ',' + random_color2 + ',' + random_color3 + ',' + random_color5 + ')';
+			var string_couleur_target_rgba3 = 'rgba(' + random_color1 + ',' + random_color2 + ',' + random_color3 + ',' + random_color6 + ')';
+			this.$add_folder_bouton = $('<button>', {
+				id: 'add_folder_bouton',
+				html: 'Ajouter une catégorie',
+				'class': 'sommaire_collection_bouton',
+				style: 'background:' + string_couleur_target_rgba
+			});
+			this.$add_object_bouton = $('<button>', {
+				id: 'bouton_new_object',
+				html: 'Nouveau',
+				'class': 'sommaire_collection_bouton',
+				style: 'background:' + string_couleur_target_rgba2
+			});
+			this.$view_collection_bouton = $('<button>', {
+				id: 'view_collection_bouton',
+				html: 'Voir la liste entière',
+				'class': 'sommaire_collection_bouton',
+				style: 'background:' + string_couleur_target_rgba3
+			});
+
+			// construire les boutons 	
+			$('#buttonset_sommaire_collection').append(this.$add_folder_bouton).append(this.$add_object_bouton).append(this.$view_collection_bouton).buttonset();
+			$('.sommaire_collection_bouton').css('display', 'none');
+
+			// attacher les événements
+			this.$elem.on('click.sommaire_jstree_mode', '#bouton_new_object', $.proxy(this.handler_new_object, this));
+
+
+			this.$elem.on('click.sommaire_jstree_mode', '#add_folder_bouton', $.proxy(this.handler_add_folder, this));
+			this.$elem.one('click.sommaire_jstree_mode', '#view_collection_bouton', $.proxy(this.handler_view_collection, this));
+
+			return this;
+		},
+
+		handler_add_folder: function () {
+			this.$sommaire_elem.jstree("create", null, "after", {
+				"attr": {
+					"rel": "categorie",
+					"class": "categorie"
+				},
+				"data": "Nouvelle Catégorie"
+			});
+		},
 
 		handler_valide_sommaire_jstree: function (e) {
-			//this.$elem.find('.sommaire_collection.jstree').jstree('destroy');
 			//var that = this;
+			var $tree_elem = this.$elem.find('.sommaire_collection.jstree');
+			$tree_elem.bind('destroy.jstree', function () {
+			
+			});
 			this.$elem.find('.sommaire_collection.jstree').jstree('destroy');
 			this.$elem.find('.sommaire_collection > ul').find('ins').remove();
 			this.$elem.find('.sommaire_collection > ul').find('li').removeAttr('id style').removeClass();
@@ -260,7 +282,7 @@
 				type: "POST",
 				beforeSend: function () {
 
-					// nettoyer la liste des ins ajoutés par jstree
+			// nettoyer la liste des ins ajoutés par jstree
 				},
 				data: {
 					page_nom: this.$elem.find('input[name="page_name"]').val(),
@@ -276,22 +298,13 @@
 					});
 				},
 				complete: function () {
-					this.eventify();
+					this.events_sommaire_edit();
 					this.$elem.find('#bouton_sommaire_collection').button("option", "label", "Modifier");
 					$('.sommaire_collection_bouton').remove();
 				}
 			});
 			$('#wrapper').off('click.sommaire_jstree_mode', 'a');
 
-		},
-
-
-		handler_sommaire_edit_mode: function (e) {
-			this._init_sommaire_jstree();
-			$('#wrapper').on('click.sommaire_jstree_mode', 'a', function (event) {
-				event.preventDefault();
-				event.stopPropagation();
-			});
 		},
 
 		handler_new_object: function () {
@@ -303,11 +316,11 @@
 			}).load(WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/display_new_object_template/" + $current_page_name).appendTo(this.$elem);
 
 			$new_obj_elem.show('slide', {}, "easeOutQuint", function () {
-				that.ajax_form_new_object(this);
+				that._ajax_form_new_object(this);
 			});
 		},
 
-		ajax_form_new_object: function (elem) {
+		_ajax_form_new_object: function (elem) {
 			$(elem).find('#new_object_form').validate({
 				submitHandler: function (form) {
 					$(form).ajaxSubmit({
@@ -358,91 +371,100 @@
 
 		handler_edit_object: function () {
 			var that = this;
-			var $current_page_name = this.$elem.find('input[name="page_name"]').val();
-			var $objet_elem = this.$elem.find('#objet_' + $current_page_name);
-			var $titre_elem = $objet_elem.find('.objet_titre');
+			this.$current_page_name = this.$elem.find('input[name="page_name"]').val();
+			this.$objet_elem = this.$elem.find('#objet_' + this.$current_page_name);
+			this.$titre_elem = this.$objet_elem.find('.objet_titre');
 			
-			var $contenu_elem = $objet_elem.find('.objet_contenu');
+			this.$contenu_elem = this.$objet_elem.find('.objet_contenu');
 			
-			var $button_edit_object_elem = $('#bouton_edit_objet'); 
-			$button_edit_object_elem.effect("transfer", { to: $titre_elem  }, 800, function () {
-				$titre_elem.attr('contenteditable', 'true');
-				$titre_elem.on("keypress.edit_object", function (e) {
+			this.$button_edit_object_elem = $('#bouton_edit_objet'); 
+			this.$button_edit_object_elem.effect("transfer", { to: that.$titre_elem  }, 800, function () {
+				that.$titre_elem.attr('contenteditable', 'true');
+				that.$titre_elem.on("keypress.edit_object", function (e) {
 					if (e.keyCode === 13) {
 						e.preventDefault();
 					}
 				});
 			});
-			$button_edit_object_elem.effect("transfer", { to: $contenu_elem  }, 1200, function () {
-				$contenu_elem.attr('contenteditable', 'true');
-				CKEDITOR.inline($contenu_elem.attr('id'));
-				$button_edit_object_elem.button("option", "label", "Enregistrer");
-			});
-			
-			
-			
-		// on clique pour valider les modif d'un objet'	
-			$button_edit_object_elem.on('click.edit_object', function () {
-				$.ajax({
-					url: WIKIDGLOBALS.BASE_DIRECTORY + 'index.php/collection_objets/user_save_object',
-					type: 'post',
-					data: {
-						page: $current_page_name,
-						titre: $titre_elem.html(),
-						initial_index: $objet_elem.find('input[name="objet_index_initial"]').val(),
-						//contenu: $contenu_elem.html()
-						contenu: CKEDITOR.instances[$contenu_elem.attr('id')].getData()
-					},
-					dataType: 'json',
-					context: this,
-					beforeSend: function () {
-						$(this).spin();
-					},
-					error: function () {
-						alert('erreur serveur / reessayer');
-					},
-					success: function (ans) {
-						var $save_object_validation_message = $('<div>', {
-							id: 'save_object_validation_message',
-							style: 'display:none'
-						})
-						.html(ans.validation_message)
-						.appendTo($objet_elem);
-						
-						$titre_elem.effect("transfer", { to: $button_edit_object_elem  }, 800);
-						$contenu_elem.delay(800).effect("transfer", { to: $button_edit_object_elem  }, 1200, function () {
-							$save_object_validation_message
-								.show('slide')
-								.delay(1500)
-								.hide('slide', function () {
-									$(this).remove();
-								});
-							
-							if (ans.validation_success) {
-								$titre_elem.attr('contenteditable', 'false');
-								$titre_elem.off('keypress.edit_object');
-								$contenu_elem.attr('contenteditable', 'false');
-								CKEDITOR.instances[$contenu_elem.attr('id')].destroy(true);
-								$button_edit_object_elem
-									.button("option", "label", "Modifier")
-									.off('click.edit_object')
-									.one('click', $.proxy(that.handler_edit_object, that));
-							}
-							else {
-							
-							}
-						});
-					},
-					complete: function () {
-						$(this).spin(false);
-						
-						
-						
-					}
+			this.$button_edit_object_elem.effect("transfer", { to: that.$contenu_elem  }, 1200, function () {
+				that.$contenu_elem.attr('contenteditable', 'true');
+				CKEDITOR.inline(that.$contenu_elem.attr('id'));
+				var editor = CKEDITOR.instances[that.$contenu_elem.attr('id')];
+				editor.on('instanceReady', function () {
+					// on clique pour valider les modif d'un objet'	
+					that.$button_edit_object_elem.one('click.edit_object', $.proxy(that.handler_user_valid_object, that));
 				});
+				
+				that.$button_edit_object_elem.button("option", "label", "Enregistrer");
+				
 			});
+			
+		
 			//$objet_elem.find('.objet_contenu').ckeditor('inline');
 			//CKEDITOR.inlineAll();
+		},
+		
+		handler_user_valid_object: function () {
+			var that = this;
+			$.ajax({
+				url: WIKIDGLOBALS.BASE_DIRECTORY + 'index.php/collection_objets/user_save_object',
+				type: 'post',
+				data: {
+					page: that.$current_page_name,
+					titre: that.$titre_elem.html(),
+					initial_index: that.$objet_elem.find('input[name="objet_index_initial"]').val(),
+					//contenu: $contenu_elem.html()
+					contenu: CKEDITOR.instances[that.$contenu_elem.attr('id')].getData()
+				},
+				dataType: 'json',
+				context: this,
+				beforeSend: function () {
+					this.$button_edit_object_elem.spin();
+				},
+				error: function () {
+					alert('erreur serveur / reessayer');
+				},
+				success: function (ans) {
+					var $save_object_validation_message = $('<div>', {
+						id: 'save_object_validation_message',
+						style: 'display:none'
+					})
+					.html(ans.validation_message)
+					.appendTo(this.$objet_elem);
+					
+					this.$titre_elem.effect("transfer", { to: this.$button_edit_object_elem  }, 800);
+					this.$contenu_elem.delay(800).effect("transfer", { to: that.$button_edit_object_elem  }, 1200, function () {
+						$save_object_validation_message
+							.show('slide')
+							.delay(1500)
+							.hide('slide', function () {
+								$(this).remove();
+								if (ans.validation_success) {
+									that.$titre_elem.attr('contenteditable', 'false');
+									that.$titre_elem.off('keypress.edit_object');
+									that.$contenu_elem.attr('contenteditable', 'false');
+									var editor = CKEDITOR.instances[that.$contenu_elem.attr('id')];
+							
+									editor.on('destroy', function () {
+										console.info(that.$button_edit_object_elem);
+										that.$button_edit_object_elem
+											.button("option", "label", "Modifier");
+										that.events_object_edit();
+									});
+									editor.destroy(true);
+								}
+								else {
+							// validation ratée :: try again
+								that.$button_edit_object_elem
+									.one('click', $.proxy(that.handler_valid_object, that));
+								}
+							});
+					});
+				},
+				complete: function () {
+					this.$button_edit_object_elem.spin(false);
+				}
+			});
 		},
 
 		handler_view_collection: function () {
@@ -569,13 +591,7 @@
 				})
 			});
 		},
-		eventify: function () { // ajouter le hover pour modifier l'apparence du pointeur et indiquer une action possible'
-			this.$elem.one('click.sommaire_jstree_mode', '#bouton_sommaire_collection', $.proxy(this.handler_sommaire_edit_mode, this));
-
-			this.$elem.one('click.sommaire_jstree_mode', '#bouton_edit_objet', $.proxy(this.handler_edit_object, this));
-
-			return this;
-		},
+		
 	};
 
 	$.fn.jstree_sommaires_collections_objets = function (options) {

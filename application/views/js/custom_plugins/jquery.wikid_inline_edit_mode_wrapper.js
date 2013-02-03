@@ -10,8 +10,7 @@
 			this.$elem = $(elem);
 			
 			this.$elem_contenu_wikid = $('.contenu_wikid', $(elem));
-		// une reference au div contenu editable	
-			//this.$elem_contenu_ckeditable = ($('.contenu_wikid > .contenu_ckeditable', this.$elem).length) ? this.$elem_contenu_wikid.find('.contenu_ckeditable') : this.$elem_contenu_wikid;
+		
 		// hidden field pour connaitre la page servie initialement
 			this.$elem_hidden_page_name = $('input[name="page_name"]', $(elem));
 		// quel div dans le layout de la page : page ou footer.	
@@ -28,8 +27,9 @@
 		options: {
 			on_update_callback: function (page_nom) {}
 		},
+		// une reference au div contenu ckeditable qui change à la navigation
 		
-		_get_elem_contenu_ckeditable: function () {
+		_get_elem_contenu_ckeditable: function () { 
 			return ($('.contenu_wikid > .contenu_ckeditable', this.$elem).length) ? $('.contenu_wikid', this.$elem).find('.contenu_ckeditable') : $('.contenu_wikid', this.$elem);
 		},
 		
@@ -96,8 +96,7 @@
 			var that = this;
 			var contenu_wikidable_elem_ID = this.$elem_contenu_wikid.attr('id'); // 'page' 'footer' par ex. 
 			this.$elem.toggleClass('edit_mode_actif');
-			// cacher le bouton edit_mode
-			this.$bouton_edit_mode.hide();
+			
 			
 			// on s'assure de désactiver les liens cliquables
 			$('#wrapper').on('click.div_wikidable', 'a', function (event) {
@@ -105,7 +104,9 @@
 				event.stopPropagation();
 			});
 			console.info(this._get_elem_contenu_ckeditable());
-			this.$bouton_edit_mode.effect("transfer", { to: this._get_elem_contenu_ckeditable()  }, 1200, function () {
+			this.$bouton_edit_mode.effect("transfer", { to: this._get_elem_contenu_ckeditable()  }, 800, function () {
+			// cacher le bouton edit_mode
+				$(this).hide('scale');
 			// create Ckeditor instance 
 				that._get_elem_contenu_ckeditable().attr('contenteditable', 'true');
 				CKEDITOR.inline(that._get_elem_contenu_ckeditable().attr('id'));
@@ -155,32 +156,37 @@
 		
 		
 		handler_valid_page: function () {
+			var that = this;
 			var ajaxData = {};
 			ajaxData['contenu'] = CKEDITOR.instances[this._get_elem_contenu_ckeditable().attr('id')].getData();
 			ajaxData['nom_page'] = this.$wikid_options.find('input[name|="nom_page"]').val();
 			ajaxData['collection_objets'] = (this.$wikid_options.find('input[name|="collection_objets"]').attr('checked')) ? 1 : 0;
-			$.ajax({
-				url: WIKIDGLOBALS.BASE_DIRECTORY + 'index.php/pages/user_save_page_contenu/' +  this.$elem_contenu_wikid.data('page_nom'),
-				type: 'post',
-				context: this,
-				data: ajaxData,//extra data that should be submitted along with the form
-				dataType: 'json',
-				beforeSend: function () {
-					this.$elem.spin();
-					this._get_elem_contenu_ckeditable().effect("transfer", { to: this.$bouton_submit_elem }, 800);
-				console.info(CKEDITOR.instances[this._get_elem_contenu_ckeditable().attr('id')].getData());	
-				},
-				error: function () {
-					alert('erreur serveur');
-				},
-				success: function (ans) {
-					this._close_ckeditor();
-				},
-				complete: function () {
-					this.$elem.spin(false);
-					// this.options.on_update_callback.call()
-				}
+			
+			this._get_elem_contenu_ckeditable().effect("transfer", { to: this.$bouton_submit_elem }, 800, function () {
+				$.ajax({
+					url: WIKIDGLOBALS.BASE_DIRECTORY + 'index.php/pages/user_save_page_contenu/' +  that.$elem_contenu_wikid.data('page_nom'),
+					type: 'post',
+					context: that,
+					data: ajaxData,//extra data that should be submitted along with the form
+					dataType: 'json',
+					beforeSend: function () {
+						this.$elem.spin();
+					console.info(CKEDITOR.instances[this._get_elem_contenu_ckeditable().attr('id')].getData());	
+					},
+					error: function () {
+						alert('erreur serveur');
+					},
+					success: function (ans) {
+						this._close_ckeditor();
+					},
+					complete: function () {
+						this.$elem.spin(false);
+						// this.options.on_update_callback.call()
+					}
+				});
+			
 			});
+			
 		
 		},
 	

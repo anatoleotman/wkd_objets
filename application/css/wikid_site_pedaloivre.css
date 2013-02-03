@@ -48,11 +48,8 @@ body{
 	margin-left: auto;
 }
 #header_cadre{
-	position: absolute;
-	height:86px;
-	left:4px;
-	top:693px;
-	width:179px;
+	position: relative;
+	width:100%;
 }
 #header{
 	width: 100%;
@@ -62,12 +59,9 @@ body{
 	border: 1px solid #888;
 }
 #page_cadre{
-	height:743px;
-	left:338px;
 	overflow:visible;
-	position:absolute;
-	top:150px;
-	width:910px;
+	position:relative;
+	width:100%;
 }
 #page{
 	width: 100%;
@@ -78,11 +72,8 @@ body{
 	*/
 }
 #footer_cadre{
-	position: absolute;
-	height:226px;
-	left:4px;
-	top:463px;
-	width:135px;
+	position: relative;
+	width:100%;
 }
 #footer{
 	width: 100%;
@@ -131,12 +122,10 @@ p{
 }
 
 #menu_cadre{
-	position: absolute;
-	top: 0px;
+	position: relative;
 	/*left: 537px;*/
 	overflow: none;
 	width: 100%;
-	height: 260px;
     	min-width:960px;
     	background: rgb(255,255,255);
 	/* Old browsers */
@@ -169,7 +158,6 @@ p{
 
 #menu_liste {
     list-style: none;
-    height: 20px;
     margin: 10px;
     font-weight: bold;
 }
