@@ -1,6 +1,7 @@
 <div id="objet_<?=$objets_nom_page_sommaire;?>">
 	<input type="hidden" value="<?=$objet_data['initial_index'];?>" name="objet_index_initial">
 	<input type="hidden" value="<?=$objet_data['titre'];?>" name="objet_nom">
+	<input type="hidden" value="<?=$objet_data['url_index'];?>" name="url_index">
 	<h1 class="objet_titre"><?=$objet_data['titre'];?></h1>
 	<p id="objet_contenu_ckeditable" class="objet_contenu"><?=$objet_data['contenu'];?></p>
 	<?php 

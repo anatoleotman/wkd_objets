@@ -126,6 +126,7 @@ p{
 	/*left: 537px;*/
 	overflow: none;
 	width: 100%;
+	height : 100px;
     	min-width:960px;
     	background: rgb(255,255,255);
 	/* Old browsers */
@@ -156,10 +157,15 @@ p{
 	height: 100%;
 }
 
+#menu li.page_courante > a {
+	font-style:oblique;
+}
+
 #menu_liste {
     list-style: none;
     margin: 10px;
     font-weight: bold;
+    position: absolute;
 }
 
 #menu_liste li {
@@ -200,14 +206,25 @@ p{
 	font-family:"Maven Pro",sans-serif;
 }
 
+#jstree_form {
+	font-family:"Maven Pro",sans-serif;
+	font-size:1.35rem;
+    	line-height:1.5;
+}
+
+#jstree_form p {
+	font-size:1.1rem;
+}
+
 #menu_liste li ul li:hover {
 	background: #49A1ED;
 }
 
-.ui-effects-transfer { border: 2px solid black; }
+.ui-effects-transfer { border: 1px solid black; }
 
-
-
+#page_cadre.ui-effects-transfer { border: 3px solid blue; }
+.ui_transfer_effect_tooltip { border: 1px dashed black; }
+.uitransfer_red { border: 3px solid red; }
 /*
 ul#menu_liste li a{
 	margin: 0px 20px;

@@ -11,8 +11,11 @@
 			this.elem = elem;
 			this.$elem = $(elem);
 			this.$elem_menu = $('#menu', elem);
+			this.$menu_ul_elem = $('ul#menu_liste', elem);
+			
 			
 			this.$elem.addClass('wikid_jsTree');
+			this._code_couleur_init();
 			//build the initial DOM structure
 			this._build_dialog();
 			this.eventify_menu();
@@ -26,6 +29,19 @@
 		//options par défault à remplir"
 		_build_dialog: function () {
 			var that = this;
+			
+			this.$bouton_edit_mode = $('<button>', {
+				id: 'bouton_menu_edit_mode',
+				value: 'Edit menu',
+				'class': 'bouton_edit_mode'
+			})	
+				.appendTo(this.$elem)
+				.button()
+				.css('background', this.string_couleur_target_rgba)
+				.on('mouseover', function () {
+					$(this).effect('transfer', {to: that.$menu_ul_elem, className: 'ui_transfer_effect_tooltip'}, 500);
+				})
+			
 			
 			this.$menu_tree = $('<div>', {
 				id: 'menu_tree',
@@ -43,29 +59,112 @@
 					modal: false,
 					position: ['left', 'top'],
 					create: function (event, ui) {
-						$(this).siblings('.ui-dialog-buttonpane').hide();
-						that._init_jstree();
+						//$(this).siblings('.ui-dialog-buttonpane').hide();
 					},
 					open: function (event, ui) {
-						
+						$(this).show('scale');
+					},
+					close: function () {
+						that.eventify_menu();
 					},
 					buttons: {
-						'Ok Menu': function () {
-							that.valide_jstree();		
+						'Nouvelle page': function () {
+							var $new_page_elem = $('#nouvelle_page');
+							if (!$new_page_elem.length) {
+								$.proxy(that.handler_new_page(), that);
+							}
+							else {
+								$new_page_elem.effect('highlight', {color: that.string_couleur_target_rgba}, 1000);
+							}
+							
+						},
+						'Valider menu': function () {
+							$.proxy(that.valide_jstree(), that);
+							$(this).dialog('close');
 						}
+						
 					}
 				});
 				
 			return this;
 		},
+		
+		handler_new_page: function () {
+			var that = this;
+			var $current_page_name = $('input[name="page_name"]', this.$elem).val();
+			var $new_page_elem = $('<div>', {
+				id: 'nouvelle_page',
+				style: 'display:none'
+			})
+				.load(WIKIDGLOBALS.BASE_DIRECTORY + "index.php/pages/display_new_page_form/", function () {
+					$(this).show('slide', {}, "easeOutQuint", function () {
+						$new_page_elem.effect('highlight', {color: that.string_couleur_target_rgba}, 1000);
+						that._ajax_form_new_page(this);
+					});
+				})
+				.appendTo('#menu_tree_dialog')
+				.css('float', 'right');
+		},
+
+		_ajax_form_new_page: function (elem) {
+			$(elem).find('#nouvelle_page_form').validate({
+				submitHandler: function (form) {
+					$(form).ajaxSubmit({
+						target: $(form).find('p'),
+						//type: 'POST',
+						context: form,
+						dataType: 'json',
+						beforeSend: function () {
+							$(this).spin();
+						},
+						error: function () {
+							alert('erreur serveur / reessayer');
+						},
+						success: function (ans) {
+							if (ans.success) {
+								var $menu_tree_elem = $('#menu_tree_dialog').find('#menu_tree');
+								console.info($menu_tree_elem);
+								window.location.hash = ans.new_page_titre;
+								$menu_tree_elem.find('#menu_tree').jstree("create", null, "after", {
+									"attr": {
+										"rel": "link"
+									},
+									"data": {
+										"title": ans.new_page_titre,
+										"attr": {
+											"class": "link_page_wikid",
+											"href": WIKIDGLOBALS.BASE_URL + "index.php/sync/show/" + ans.new_page_titre
+										}
+									}
+								}, function () {
+									alert('une entrée a été ajoutée au menu')
+								}, true);
+								$(this).parent().remove();
+
+							} else {
+								alert('cette fiche existe déjà');
+							}
+						},
+						complete: function () {
+							$(this).spin(false);
+							// this.options.on_update_callback.call()
+						}
+					});
+				}
+			});
+
+
+
+		},
 
 		_init_jstree: function () {
+			var that = this;
 			this.$menu_tree.bind("move_node.jstree", function (e, data) {
 				//console.info(data.rslt.o);
 			}).bind("loaded.jstree", function (e, data) {
 				$(this)
 					.jstree("open_all", -1, true)
-					.toggle('slide', {direction: 'down'}, 'fast');
+					.show();
 				// cree le formulaire
 				var form_content_html = [
 					'<fieldset style="display:block">',
@@ -97,10 +196,12 @@
 					action: ''
 				});
 				$form.append(form_content_html);
+				
+				var $div = $('<div>').append($form);
 				//$form.appendTo($(this));
 				//$form.appendTo($('#menu_tree_dialog'));
 				$('#menu_tree_dialog')
-					.append($form)
+					.append($div)
 					.siblings('.ui-dialog-buttonpane').show();
 				$(':submit', $form).button();	
 				$('#link', $form)
@@ -172,7 +273,9 @@
 						var $inputs = $('input', this.currentForm);
 						var $menu_tree = $('#menu_tree');
 						var $selected_node = $menu_tree.jstree('get_selected').first();
+						
 						var $selected_link = $('a', $selected_node).first();
+						$selected_link.effect('highlight', {color: that.string_couleur_target_rgba}, 3000);
 						$selected_link.attr('href', '#' + $inputs.eq(0).val());
 						//$selected_link.text($inputs.eq(1).val());
 						$menu_tree.jstree('rename_node', $selected_node, $inputs.eq(1).val());
@@ -222,17 +325,15 @@
 				*/
 				
 			})
+			.bind("create.jstree", function (e, data) {
+				$(data.rslt.obj).effect('highlight', {color: that.string_couleur_target_rgba}, 1000);
+			})
 			.jstree({
 				"ui": {
 					"select_limit": -1,
 					"initially_select": []
 				},
 				"core": {},
-				"themes": {
-					"theme": "default",
-					"dots": false,
-					"icons": true
-				},
 				"json_data": {
 					"ajax": {
 						"url": WIKIDGLOBALS.BASE_DIRECTORY + "index.php/menu/init_jstree/"
@@ -247,14 +348,14 @@
 								console.info(this._get_parent(obj));
 							}
 						},
-						*/
+						
 						"create": {
 							"label": "Creer un noeud",
 							"action": function (obj) {
 								this.create(obj, "after");
 							}
 						},
-						
+						*/
 						"lien vers": {
 							label: "Modifier le lien",
 							action: function (obj) {
@@ -297,66 +398,82 @@
 						}
 					}
 				},
-				"crrm": {
-					"move": {
-						"check_move": function (move_object) {
-							var p = this._get_parent(move_object.cr);
-							var pp = move_object.cr;
-							var child = this._get_children(move_object.o);
-							//console.info(child.length);
-							if (p === -1 && child.length === 0) {return true};
-							if (pp === -1) {return true};
-						}
-					}
-				},
+//				"crrm": {
+//					"move": {
+//						"check_move": function (move_object) {
+//							var p = this._get_parent(move_object.cr);
+//							var pp = move_object.cr;
+//							var child = this._get_children(move_object.o);
+//							//console.info(child.length);
+//							if (p === -1 && child.length === 0) {return true};
+//							if (pp === -1) {return true};
+//						}
+//					}
+//				},
 				"types": {
-					"valid_children": [ "default" ],
+					"max_children": -2,
+					"max_depth": -2,
+					"valid_children": ["categorie", "link"],
 					"types": {
-					// the default type
-						"default" : {
-							"max_children"	: -1,
-							"max_depth"	: -1,
-							"valid_children": "all",
-							"icon" : {
-								"image" : "http://static.jstree.com/v.1.0rc/_docs/_drive.png"
-							},
+						// the default type
+						"default": {
+							"valid_children": "none",
 							// Bound functions - you can bind any other function here (using boolean or function)
 							//"select_node"	: true,
 							//"open_node"	: true,
 							//"close_node"	: true,
-							"create_node": function (node) {
-								console.info('initnode');
-								console.info(node);
-								return true;
-							},
+//							"icon": {
+//								"image": WIKIDGLOBALS.BASE_URL + "application/views/js//images/file.png"
+//							},
 							//"delete_node"	: true
+						},
+						"categorie": {
+							"max_children": -1,
+							"max_depth": -1,
+							"valid_children": ["default", "categorie", "link"],
+//							"icon": {
+//								"image": WIKIDGLOBALS.BASE_URL + "application/views/js//images/folder.png"
+//							}
+						},
+						"link": {
+							"max_children": -2,
+							"max_depth": -2,
+							"valid_children": "none",
+//							"icon": {
+//								"image": WIKIDGLOBALS.BASE_URL + "application/views/js//images/file.png"
+//							},
 						}
+
 					}
 				},
 
-				"plugins": ["themes", "json_data", "ui", "crrm", "dnd", "contextmenu", "types"]
+				"plugins": ["themeroller", "json_data", "ui", "crrm", "dnd", "contextmenu", "types"]
 			});
 		},
 		
 		valide_jstree: function () {
 			var getjsons = this.$menu_tree.jstree("get_json", -1, ['style'], ['href', 'title']); 
-				$.ajax({
-					url: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/menu/save_menu/",
-					type: "POST",
-					data: {
-						menu: getjsons,
-						ajax_enabled: 1
-					},
-					dataType: "json",
-					context: this,
-					success : function (ans) {
-						if(ans.success) {
-							//this.refresh_menu_ajax();
-							//location.reload();
-						}		
-					}	
-				});
-			this.$menu_tree.jstree('destroy');	
+			$.ajax({
+				url: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/menu/save_menu/",
+				type: "POST",
+				data: {
+					menu: getjsons,
+					ajax_enabled: 1
+				},
+				dataType: "json",
+				context: this,
+				success : function (ans) {
+					if (ans.success) {
+						$('#jstree_form').remove();
+						this.$menu_tree.jstree('destroy');
+						this.$menu_tree.empty();
+						//this.eventify_menu();
+						this._refresh_menu_html();	
+						//location.reload();
+					}		
+				}	
+			});
+				
 			/*
 			this.$menu_tree.toggle("scale", {}, "slow", function () {
 				$(this).jstree("destroy");
@@ -364,24 +481,45 @@
 			});
 			*/
 		},
+		
+		_refresh_menu_html: function () {
+			$('#menu').hide('scale', function () {
+					$(this).empty()
+					.css('display', 'none')
+					.load(WIKIDGLOBALS.BASE_DIRECTORY + 'index.php/menu/get_menu_ul', function () {
+						$(this).show('scale');
+					});
+					
+			});
+			
+			return this;
+		},
+		
+		
+		_code_couleur_init: function () {
+			var random_color1 = Math.floor(Math.random() * 256);
+			var random_color2 = Math.floor(Math.random() * 256);
+			var random_color3 = Math.floor(Math.random() * 256);
+			var random_color4 = Math.random();
+			this.string_couleur_target_rgba = 'rgba(' + random_color1 + ',' + random_color2 + ',' + random_color3 + ',' + random_color4 + ')';
+			return this;
+		},
 	
 		eventify_menu: function () { // ajouter le hover pour modifier l'apparence du pointeur et indiquer une action possible'
-			this.$elem.on('dblclick', $.proxy(this.handler_edit_mode, this));
+			//this.$elem.on('dblclick', $.proxy(this.handler_edit_mode, this));
 			
-			this.$bouton_edit_mode = $('<button>', {
-				id: 'bouton_menu_edit_mode',
-				value: 'Edit menu',
-				'class': 'bouton_edit_mode'
-			})	
-				.appendTo(this.$elem)
-				.button();
-			
-			this.$elem.on('click.edit_mode', '#bouton_menu_edit_mode', $.proxy(this.handler_edit_mode, this));
+			this.$elem.one('click.edit_mode', '#bouton_menu_edit_mode', $.proxy(this.handler_edit_mode, this));
 			return this;
 		},	
 		
 		handler_edit_mode: function () {
-			$('#menu_tree_dialog').dialog('open'); // on a perdu la reference this.menu_tree_dialog !!?
+			var that = this;
+			this.$bouton_edit_mode.effect('transfer', {to: this.$elem_menu}, 600, function () {
+				if (that.$menu_tree.children().length === 0) {
+					that._init_jstree();
+				}
+				$('#menu_tree_dialog').dialog('open');
+			})
 		},
 		
 		purge: function (d) {

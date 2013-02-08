@@ -20,6 +20,7 @@
 				activeLink: true,
 				expandSub : true
 			});
+			this.menu_active_link_init();
 			//this.$elem.find('.sommaire_collection').accordion();
 			return this;
 		},
@@ -41,6 +42,27 @@
 			return this;
 		},
 		
+		menu_active_link_init: function () {
+			var path = window.location.pathname.split('/');
+			var page = path[path.length - 1];
+			var hash_full = window.location.hash.split('/');
+			var hash_last_slash = hash_full[hash_full.length - 1];
+			console.info(page);
+			console.info(hash_last_slash);
+			var $menu_wrapper_elem = $('#menu_cadre');
+			if (!page) {page = this.starting_page_nom;}
+			if(hash_last_slash) {page = hash_last_slash;}
+			$menu_wrapper_elem.find("a[href$='" + page + "']").parents().addClass('page_courante');
+		},
+		
+		menu_active_link_hashchange: function (hash_part) {
+			
+			var $menu_wrapper_elem = $('#menu_cadre');
+			console.info($menu_wrapper_elem);
+			$menu_wrapper_elem.find('.page_courante').removeClass('page_courante');
+			$menu_wrapper_elem.find("a[href$='" + hash_part + "']").parents().addClass('page_courante');
+		},
+		
 		_init_hashchange_plugin: function () {
 			var that = this;
 			$(window).hashchange( function () { 
@@ -48,15 +70,20 @@
 				var complete_hash = ( hash.replace( /^#/, '' ) || that.starting_page_nom);
 				//var nom_page = hash.replace( /^#/, '' );
 				var split_hash = complete_hash.split('/');
-				if (split_hash.length === 1) that.display_ajax(split_hash[0]);
-				if (split_hash.length === 2) {
-					if (split_hash[0] === that.$elem_contenu_wikid.data('page_nom')) {
+				if (split_hash.length === 1) {
+					that.display_ajax(split_hash[0]);
+					that.menu_active_link_hashchange(split_hash[0]);
+				}
+				else if (split_hash.length === 2) {
+					if (split_hash[0] === that.$elem_contenu_wikid.data('page_nom')) { // si objet demandé appartient à la page courante
 						that._objets_display(split_hash[1]);
 					}
 					else {
 						that.display_ajax(complete_hash);
+						that.menu_active_link_hashchange(split_hash[0]);
 					}
 				}
+				
 			});
 		},
 		
@@ -112,6 +139,7 @@
 			});
 		},
 		
+		
 		display_url_base_hash: function () { // que j'appelle depuis le main.js handler document.ready()
 			var hash = window.location.hash;
 			if (hash != '') { // si hash vide ne fait rien
@@ -122,34 +150,59 @@
 		},
 		
 		_make_document_links_ajax: function () { 
-			var that = this;
-			var lastslash = function (t) { 
-				return t.replace(/^.+\/([^\/]*)$/,'$1');
-			};
+//			var that = this;
+//			var lastslash = function (t) { 
+//				return t.replace(/^.+\/([^\/]*)$/,'$1');
+//			};
 		// pour les liens du menu
-			$(document).on('click', 'a[href*="wkd/show/"]', function (event) {
+//			$(document).on('click', 'a[href*="/show/"]', function (event) {
+//	    			event.preventDefault(); // Ajax here
+//	    			var nom = lastslash($(this).attr('href'));
+//	    			
+//	    			if ($(event.target).hasClass('sommaire_collection') || $(event.target).hasClass('link_obj_collection')) {
+//	    				window.location.hash = that.$elem_contenu_wikid.data('page_nom') + '/' + nom;
+//	    			}
+//	    			else {
+//	    				window.location.hash = nom;
+//	    			}
+//	    			
+//	    			//changement de hash va appeler display_ajax()
+//				//that.display_ajax("page", nom);
+//				
+//	   			return false; //for good measure
+//			});
+			
+			$(document).on('click', 'a[href*="/sync/show/"]', function (event) {
 	    			event.preventDefault(); // Ajax here
-	    			var nom = lastslash($(this).attr('href'));
+	    			var href = $(event.target).attr('href');
+	    			var marqueur = '/sync/show/';
+	    			var internal_link = href.substring(href.lastIndexOf(marqueur) + marqueur.length, href.length);
+	    			var hashes = internal_link.split('/');
 	    			
-	    			//changement de hash va appeler display_ajax()
-				//that.display_ajax("page", nom);
-				window.location.hash = nom;
+	    			
+	    			if (hashes.length === 2) {
+	    				window.location.hash = hashes[0] + '/' + hashes[1];
+	    			}
+	    			else if (hashes.length === 1) {
+	    				window.location.hash = hashes[0];
+	    			}
 	   			return false; //for good measure
 			});
-		// pour les liens du sommaire collection objet
-			this.$elem.on('click', 'a[href*="/show/"].sommaire_collection', function (event) {
-				event.preventDefault(); // Ajax here
-				var titre = lastslash($(this).attr('href'));
-				//var hash_last_slash = lastslash(window.location.hash);
-				window.location.hash = that.$elem_contenu_wikid.data('page_nom') + '/' + titre;
-			});
 			
-			this.$elem.on('click', 'a[href*="/show/"].link_obj_collection', function (event) {
-				event.preventDefault(); // Ajax here
-				var titre = lastslash($(this).attr('href'));
-				//var hash_last_slash = lastslash(window.location.hash);
-				window.location.hash = that.$elem_contenu_wikid.data('page_nom') + '/' + titre;
-			});
+		// pour les liens du sommaire collection objet
+//			this.$elem.on('click', 'a.sommaire_collection', function (event) {
+//				event.preventDefault(); // Ajax here
+//				var titre = lastslash($(this).attr('href'));
+//				//var hash_last_slash = lastslash(window.location.hash);
+//				window.location.hash = that.$elem_contenu_wikid.data('page_nom') + '/' + titre;
+//			});
+//			
+//			this.$elem.on('click', 'a.link_obj_collection', function (event) {
+//				event.preventDefault(); // Ajax here
+//				var titre = lastslash($(this).attr('href'));
+//				//var hash_last_slash = lastslash(window.location.hash);
+//				window.location.hash = that.$elem_contenu_wikid.data('page_nom') + '/' + titre;
+//			});
 		},
 		
 		display_ajax: function (nom_page) { //nom de la page à afficher (appel de model_getpage())

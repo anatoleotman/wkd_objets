@@ -40,3 +40,13 @@ function url_normalize_str ($str) {
 	 
 	return $str;
 }
+
+function url_kill_apostrophes ($str) {
+	$invalid = array("`" => "_", "´" => "_", "„" => "_", "`" => "_",
+	"´" => "_", "“" => "_", "”" => "_", "´" => "_", "&acirc;€™" => "_", "{" => "",
+	"~" => "", "–" => "-", "’" => "_", "," => "_", "'" => "_");
+	 
+	$str = str_replace(array_keys($invalid), array_values($invalid), $str);
+	 
+	return $str;
+}

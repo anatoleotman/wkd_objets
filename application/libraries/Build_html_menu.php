@@ -22,11 +22,11 @@ class Build_html_menu {
 	          	foreach ($list_menu as $data) {
 	          		if ($data['parent'] == 'racine') {
 	          			$menu .= '<li class="categorie">';
-	          			$menu .= anchor("wkd/show/".$data['alias_page'],$data['alias_nom']);
+	          			$menu .= anchor("sync/show/".$data['alias_page'],$data['alias_nom']);
 	          			$menu .= '<ul class="submenu">';	       		
 	          			foreach ($list_menu as $data1) {
 	          				if ($data1['parent'] == $data['alias_nom']) {	          		          								$menu .= '<li class="submenu_item">';
-	          					$menu .= anchor("wkd/show/".$data1['alias_page'],$data1['alias_nom']);
+	          					$menu .= anchor("sync/show/".$data1['alias_page'],$data1['alias_nom']);
 	          					$menu .= "</li>";
 	          				}	          			
 	          			}

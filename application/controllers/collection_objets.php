@@ -39,7 +39,7 @@ class Collection_objets extends CI_Controller {
 		$current_user_id = $session_user_data['user_id'];
 		$new_obj_titre = $this->input->post('titre_new_object', true);
 		$new_obj_titre = trim($new_obj_titre, ' ');
-		$new_obj_url_index = url_normalize_str($new_obj_titre);
+		$new_obj_url_index = url_kill_apostrophes(url_normalize_str(strtolower($new_obj_titre)));
 		$bool_already_exists = $this->Collection_objets_model->bool_check_if_obj_url_index_already_exists($collection_nom, $new_obj_url_index);
 		
 		if (!$bool_already_exists) {
@@ -48,13 +48,13 @@ class Collection_objets extends CI_Controller {
 		
 		$out['success'] = ($bool_already_exists) ? false : true;
 		$out['new_obj_titre'] = $new_obj_titre;
-		$out['new_obj_url_index'] = url_normalize_str($new_obj_url_index);
+		$out['new_obj_url_index'] = $new_obj_url_index;
 		$out['collection_page_nom'] = $collection_nom;
 		echo json_encode($out);
 	}
 	
 	public function display_new_object_template ($nom_page_sommaire) {
-	// nouvel objet on charge un template	
+	// nouvel objet on charge un formulaire pour demander le nom
 		$this->_security_check_logged_in_or_exit();
 		$data = array(
 				'objets_nom_page_sommaire' => $nom_page_sommaire,
@@ -105,7 +105,7 @@ class Collection_objets extends CI_Controller {
 		
 		$a_attr = array(
 			'class' => 'link_obj_collection',
-			'rel' => 'link'
+			//'rel' => 'link'
 		);
 		foreach ($collection_array as $data) {
 			$links_array[] = anchor("sync/show/".$data['page_nom']."/".$data['url_index'], $data['titre'], $a_attr);
@@ -131,6 +131,14 @@ class Collection_objets extends CI_Controller {
 		} else {
 			$out['validation_message'] = 'object is OK';
 			$out['validation_success'] = true;
+			$contenu = $this->input->post('contenu', true);
+			$init_index = $this->input->post('initial_index', true);
+			$titre = $this->input->post('titre', true);
+			$sommaire_page = $this->input->post('sommaire_page', true);
+			//user_save_object ($collection_nom, $initial_index, $titre, $url_index, $contenu, $user_id)
+			$url_index = url_kill_apostrophes(url_normalize_str(strtolower($titre)));
+			$data = $this->Collection_objets_model->user_save_object($sommaire_page, $init_index, $titre, $url_index, $contenu, $current_user_id);
+			$out = array_merge($out, $data);
 		}
 		 
 		echo json_encode($out);
@@ -146,6 +154,17 @@ class Collection_objets extends CI_Controller {
 		else {
 			return true;
 		}
+	}
+	
+	public function get_objects_from_every_collection () {
+		$term = $this->input->get('term');
+  		$list_menu = $this->Collection_objets_model->get_objects_from_every_collections_list($term);
+  		if (!empty($list_menu)) {
+  			foreach ($list_menu as $value) {
+  				$out[] = $value['page_nom'].'/'.$value['url_index'];
+  			}
+  		}
+  		echo json_encode($out);
 	}
 	
 	/*

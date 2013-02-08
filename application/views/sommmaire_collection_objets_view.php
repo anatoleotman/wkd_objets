@@ -5,6 +5,5 @@
 </div>
 <?php 
 if ($logged) { ?>
-<div id="buttonset_sommaire_collection" class="buttonset"><button id="bouton_sommaire_collection" value="Edit Sommaire">Modifier</button>
-</div>
+<div id="buttonset_sommaire_collection" class="buttonset"><button id="bouton_sommaire_collection" value="Edit Sommaire">Modifier  sommaire</button></div>
 <?php } ?>

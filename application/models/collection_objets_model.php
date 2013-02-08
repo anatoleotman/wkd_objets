@@ -42,19 +42,45 @@ class Collection_objets_model extends CI_Model {
 	       		return $query->row_array();
 		}		
     	}
+#    	
+#    	function get_object_from_collection ($collection_page_nom, $objet_url_index) {
+#    		$where_options_array = array(
+#    			'page_nom' => $collection_page_nom,
+#    			'url_index' => $objet_url_index
+#    		);
+#    		$query = $this->db->from('objets')
+#  				->where($where_options_array)
+#  				->order_by('date', 'desc')
+#  				->limit(1)
+#  				->get();
+#  		return $query->row_array();
+#    	}
     	
-    	function get_object_from_collection ($collection_page_nom, $objet_titre) {
-    		$where_options_array = array(
+    	function get_object_from_collection ($collection_page_nom, $objet_url_index) {
+    		$initial_index_where_options_array = array(
     			'page_nom' => $collection_page_nom,
-    			'url_index' => $objet_titre
+    			'url_index' => $objet_url_index
     		);
-    		$query = $this->db->from('objets')
-  				->where($where_options_array)
+    		$initial_index_query = $this->db->from('objets')
+  				->where($initial_index_where_options_array)
+  				->order_by('date', 'desc')
+  				->limit(1)
+  				->select('initial_index')
+  				->get();
+  		$initial_index = $initial_index_query->row()->initial_index;
+  		$last_index_where_options_array = array(
+    			'page_nom' => $collection_page_nom,
+    			'initial_index' => $initial_index
+    		);
+    		$last_index_query = $this->db->from('objets')
+  				->where($last_index_where_options_array)
   				->order_by('date', 'desc')
   				->limit(1)
   				->get();
-  		return $query->row_array();
+  		return $last_index_query->row_array();
+  		
     	}
+    	
     	
     	function bool_check_if_obj_url_index_already_exists ($collection_page_nom, $new_object_url_index) {
     		$where_options_array = array(
@@ -62,8 +88,6 @@ class Collection_objets_model extends CI_Model {
     			'url_index' => $new_object_url_index
     		);
     		$query = $this->db->from('objets')
-  				//->where('page_nom', $collection_page_nom)
-  				//->or_where($or_where_options)
   				->where($where_options_array)
   				->get();
   		$result_array = $query->result_array();
@@ -84,6 +108,21 @@ class Collection_objets_model extends CI_Model {
                		'user_id' => $user_id
 		);
 		$this->db->insert('objets', $data); 
+    	}
+    	
+    	function user_save_object ($collection_nom, $initial_index, $titre, $url_index, $contenu, $user_id) {
+    		//page_nom 	initial_index 	titre 	url_index 	contexte 	contenu 	date 	user_id
+    		$data = array(
+			'page_nom' => $collection_nom,
+			'initial_index' => $initial_index,
+			'titre' => $titre,
+			'url_index' => $url_index,
+    			'contenu' => $contenu,
+    			'date' => time(),
+               		'user_id' => $user_id
+		);
+		$this->db->insert('objets', $data); 
+		return $data;
     	}
     	
     	function get_collection_categorie ($collection_page_nom, $titre) {
@@ -254,4 +293,25 @@ class Collection_objets_model extends CI_Model {
 		$nouvelle_page = $this->save_page($nom_page, $contenu_page_vierge);
 		return $nouvelle_page;
 	}
+	
+	function get_objects_from_every_collections_list ($term) { 
+    	// pour feed le autocomplete list lors de la creation d'un lien vers une fiche
+    		
+    		$tri = trim($term);	
+    		if (!empty($tri)) {
+    			$query = $this->db->query("
+			SELECT objs1.*
+			FROM objets objs1 LEFT JOIN objets objs2
+			ON (objs1.initial_index= objs2.initial_index AND objs1.date < objs2.date)
+			WHERE objs2.date IS NULL AND objs1.titre LIKE '%".$tri."%';"); 
+    		}
+    		else {
+    			$query = $this->db->query("
+			SELECT objs1.*
+			FROM objets objs1 LEFT JOIN objets objs2
+			ON (objs1.initial_index= objs2.initial_index AND objs1.date < objs2.date)
+			WHERE objs2.date IS NULL; "); 
+    		}
+    		return $query->result_array();
+    	}
 }

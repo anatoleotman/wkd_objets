@@ -65,12 +65,22 @@ class Pages_model extends CI_Model {
 		
 	}
     	
-    	function get_list_noms_pages () { 
-    		// pour feed le autocomplete list lors de la creation d'un lien
-    		$query = $this->db->from('pages')
+    	function get_list_noms_pages ($term) { 
+    	// pour feed le autocomplete list lors de la creation d'un lien
+    		$tri = trim($term);	
+    		if (!empty($tri)) {
+    			$query = $this->db->from('pages')
+    				->select('nom')
+    				->group_by('nom')
+    				->like('nom', $tri)
+    				->get();
+    		}
+    		else {
+    			$query = $this->db->from('pages')
     				->select('nom')
     				->group_by('nom')
     				->get();
+    		}
     		return $query->result_array();
     	}
     	
@@ -81,7 +91,7 @@ class Pages_model extends CI_Model {
   	}
     
 	function check_if_already_exists ($field_selected, $entry) {
-		return ($this->db->from('pages')->where($field_selected, $entry)->count_all_results())?TRUE:FALSE;
+		return ($this->db->from('pages')->where($field_selected, $entry)->count_all_results()) ? TRUE : FALSE;
 	}
 		
 	function user_save_page ($nom_page, $contenu, $bool_collection_objets, $user_id) {
@@ -98,9 +108,9 @@ class Pages_model extends CI_Model {
 		return $data;
 	}
 	
-	function new_page ($nom_page) {
+	function user_new_page ($nom_page, $user_id) {
 		$contenu_page_vierge = 'WIKID nouvelle page';
-		$nouvelle_page = $this->save_page($nom_page, $contenu_page_vierge);
+		$nouvelle_page = $this->user_save_page($nom_page, $contenu_page_vierge, false, $user_id);
 		return $nouvelle_page;
 	}
 	

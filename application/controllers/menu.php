@@ -31,15 +31,15 @@ class Menu extends CI_Controller {
 		echo json_encode($out);
   	}
 	
-	public function get_menu () {
+	public function get_menu_ul () {
 		// pour afficher le menu en html
   		$list_menu = $this->Menu_model->get_list_menu();
   		
 		if (isset($list_menu)) {
 			//$this->load->library('Build_html_menu', $list_menu);
 			$my_menu = new Build_html_menu();
-			$out['liste'] = $my_menu->show_menu($list_menu);
-			echo json_encode($out);
+			$out = $my_menu->show_menu($list_menu);
+			echo $out;
 		}
 	}
 	
@@ -94,9 +94,15 @@ class Menu extends CI_Controller {
   	
   	public function get_pages_list () {
   		// pour le plugin autocomplete
-  		$list_menu = $this->Pages_model->get_list_noms_pages();
-  		foreach ($list_menu as $value) {
-  			$out[] = $value['nom'];
+  		$term = $this->input->get('term');
+  		$list_menu = $this->Pages_model->get_list_noms_pages($term);
+  		$out[] = $term;
+  		if (!empty($list_menu)) {
+  			
+  			foreach ($list_menu as $value) {
+  				$out[] = $value['nom'];
+  			}
+  			
   		}
   		echo json_encode($out);
 	}

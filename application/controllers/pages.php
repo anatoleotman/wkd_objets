@@ -134,7 +134,7 @@ class Pages extends CI_Controller {
 		$out = $this->load->view('edit_page_options_view', $data, TRUE);
 		echo json_encode($out);
 	}
-	
+	/*
 	public function user_save_page () {
 		$this->_security_check_logged_in_or_exit();
 		
@@ -164,8 +164,9 @@ class Pages extends CI_Controller {
 		// give more feedback to users ? user and time etc.
 		echo json_encode($out);
 	}
+	*/
 	
-	public function user_save_page_contenu () {
+	public function user_save_page_contenu () { // avec ckeditor inline mode
 		$this->_security_check_logged_in_or_exit();
 		
 		$session_user_data = $this->Users_model->get_session_user_data();
@@ -192,6 +193,31 @@ class Pages extends CI_Controller {
 		}
 		$out = $saved_data['contenu'];
 		// give more feedback to users ? user and time etc.
+		echo json_encode($out);
+	}
+	
+	public function display_new_page_form () {
+		// nouvelle page on charge un formulaire pour demander le nom
+		$this->_security_check_logged_in_or_exit();
+		$this->load->view('nouvelle_page_view');
+	}
+	
+	public function create_new_page () {
+		$this->_security_check_logged_in_or_exit();
+	// save user's new object
+		$session_user_data = $this->Users_model->get_session_user_data();
+		$current_user_id = $session_user_data['user_id'];
+		$new_page_titre = $this->input->post('titre_new_page', true);
+		$new_page_titre = trim($new_page_titre, ' ');
+		$new_page_titre = url_kill_apostrophes(url_normalize_str(strtolower($new_page_titre)));
+		$bool_already_exists = $this->Pages_model->check_if_already_exists('nom', $new_page_titre);
+		
+		if (!$bool_already_exists) {
+			$this->Pages_model->user_new_page($new_page_titre, $current_user_id);
+		}
+		
+		$out['success'] = ($bool_already_exists) ? false : true;
+		$out['new_page_titre'] = $new_page_titre;
 		echo json_encode($out);
 	}
 	

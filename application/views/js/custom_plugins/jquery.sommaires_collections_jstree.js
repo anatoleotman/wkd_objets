@@ -48,22 +48,34 @@
 		},
 		
 		events_object_edit: function () {
+			//var that = this;
+			this.$current_page_name = this.$elem.find('input[name="page_name"]').val();
+			this.$objet_elem = this.$elem.find('#objet_' + this.$current_page_name);
+			this.$button_edit_object_elem = $('#bouton_edit_objet'); 
+//			this.$button_edit_object_elem.on('hover', function () {
+//				$(this).effect('transfer', {to: that.$elem.find('#objet_' + that.$current_page_name), className: "ui_transfer_effect_tooltip"}, 1000);
+//			});
+			
+			
 			this.$elem.one('click.sommaire_jstree_mode', '#bouton_edit_objet', $.proxy(this.handler_edit_object, this));
 		},
 		
 		handler_sommaire_edit_mode: function (e) {
-			this._init_sommaire_jstree();
-			$('#wrapper').on('click.sommaire_jstree_mode', 'a', function (event) {
-				event.preventDefault();
-				event.stopPropagation();
+			var that = this;
+			this.$current_page_name = this.$elem.find('input[name="page_name"]').val();
+			this.$sommaire_elem = this.$elem.find('#sommaire_collection_' + this.$current_page_name);
+			this.$elem.find('#bouton_sommaire_collection').effect("transfer", { to: this.$sommaire_elem  }, 800, function () {
+				that._init_sommaire_jstree();
+				$('#wrapper').on('click.sommaire_jstree_mode', 'a', function (event) {
+					event.preventDefault();
+					event.stopPropagation();
+				});
 			});
 		},
 		
 		_init_sommaire_jstree: function () {
 			// il faudra commencer par désactiver les liens cliquables
 			var that = this;
-			var $current_page_name = this.$elem.find('input[name="page_name"]').val();
-			this.$sommaire_elem = this.$elem.find('#sommaire_collection_' + $current_page_name);
 			// remove nestedaccordionplugin styles
 			this.$sommaire_elem.find('ul').find('li a').removeAttr('style').removeClass('trigger last-child');
 			// prépare les boutons
@@ -79,6 +91,7 @@
 				$('.sommaire_collection_bouton').toggle();
 			}).bind("create.jstree", function (e, data) {
 				// on test attribut rel pour savoir si ce noeud est une categorie
+				$(data.rslt.obj).effect('highlight', {color: that.string_couleur_target_rgba}, 1000);
 				if (data.rslt.obj.attr('rel') === 'categorie') {
 					data.rslt.obj.find('a').removeAttr('href');
 				}
@@ -106,26 +119,26 @@
 							//"select_node"	: true,
 							//"open_node"	: true,
 							//"close_node"	: true,
-							"icon": {
-								"image": WIKIDGLOBALS.BASE_URL + "application/views/js//images/file.png"
-							},
+//							"icon": {
+//								"image": WIKIDGLOBALS.BASE_URL + "application/views/js//images/file.png"
+//							},
 							//"delete_node"	: true
 						},
 						"categorie": {
 							"max_children": -1,
 							"max_depth": -1,
 							"valid_children": ["default", "categorie", "link"],
-							"icon": {
-								"image": WIKIDGLOBALS.BASE_URL + "application/views/js//images/folder.png"
-							}
+//							"icon": {
+//								"image": WIKIDGLOBALS.BASE_URL + "application/views/js//images/folder.png"
+//							}
 						},
 						"link": {
 							"max_children": -2,
 							"max_depth": -2,
 							"valid_children": "none",
-							"icon": {
-								"image": WIKIDGLOBALS.BASE_URL + "application/views/js//images/file.png"
-							},
+//							"icon": {
+//								"image": WIKIDGLOBALS.BASE_URL + "application/views/js//images/file.png"
+//							},
 						}
 
 					}
@@ -139,49 +152,10 @@
 								console.info(this._get_parent(obj));
 							}
 						},
-						"create": {
-							"label": "Creer un noeud",
-							"action": function (obj) {
-								this.create(obj, "after");
-							}
-						},
 						*/
-						"lien vers": {
-							label: "Modifier le lien",
-							action: function (obj) {
-								var that = this;
-								var $lien = obj.children('a');
-								this.close_node(obj);
-								//var obj_closure = obj;
-								var $input = $('<input>', {
-									value: $lien.attr('href').split('#')[1]
-								});
-								var valide_handler = function () {
-										var $trimmed = $.trim($input.val());
-										$lien.attr('href', '#' + $trimmed);
-										$input.hide('scale', function () {
-											$(this).autocomplete('destroy').remove();
-											that.open_node(obj);
-										});
-									};
-
-								$input.autocomplete({
-									source: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/menu/get_pages_list/",
-									position: {
-										my: 'left top',
-										at: 'right top'
-									},
-									change: valide_handler,
-									create: function () {
-										$(this).autocomplete('search', ['']);
-									}
-								}).appendTo(obj).keypress(function (event) {
-									if (event.which === 13) {
-										valide_handler();
-									}
-								});
-							}
-						}
+						"create": false,
+						"rename": false
+						
 					}
 				},
 				"crrm": {
@@ -255,6 +229,13 @@
 
 			return this;
 		},
+		
+		handler_valide_sommaire_jstree: function (e) {
+			this._destroy_sommaire_jstree();
+			this._save_sommaire_ul();
+			$('#wrapper').off('click.sommaire_jstree_mode', 'a');
+
+		},
 
 		handler_add_folder: function () {
 			this.$sommaire_elem.jstree("create", null, "after", {
@@ -265,14 +246,24 @@
 				"data": "Nouvelle Catégorie"
 			});
 		},
-
-		handler_valide_sommaire_jstree: function (e) {
-			//var that = this;
+		
+		_destroy_sommaire_jstree: function () {
+			var that = this;
 			var $tree_elem = this.$elem.find('.sommaire_collection.jstree');
-			$tree_elem.bind('destroy.jstree', function () {
 			
-			});
-			this.$elem.find('.sommaire_collection.jstree').jstree('destroy');
+			$tree_elem.on('destroy.jstree', function () {
+				that.$elem.find('#sommaire_collection_' + that.$elem.find('input[name="page_name"]').val()).accordion({
+						initShow: '#current',
+						activeLink: true,
+						expandSub: true
+				});
+			});	
+			$tree_elem.jstree('destroy');
+		},
+		
+		_save_sommaire_ul: function () {
+		// clean classes : destroy accordion plugin
+		// nettoyer la liste des ins ajoutés par jstree
 			this.$elem.find('.sommaire_collection > ul').find('ins').remove();
 			this.$elem.find('.sommaire_collection > ul').find('li').removeAttr('id style').removeClass();
 			this.$elem.find('.sommaire_collection > ul').find('ul').removeAttr('style').removeClass();
@@ -280,10 +271,6 @@
 			$.ajax({
 				url: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/user_valide_collection_obj_sommaire/",
 				type: "POST",
-				beforeSend: function () {
-
-			// nettoyer la liste des ins ajoutés par jstree
-				},
 				data: {
 					page_nom: this.$elem.find('input[name="page_name"]').val(),
 					sommaire_collection: this.$elem.find('.sommaire_collection > ul ').html()
@@ -291,11 +278,6 @@
 				dataType: "json",
 				context: this,
 				success: function (ans) {
-					this.$elem.find('#sommaire_collection_' + ans.page_nom).accordion({
-						initShow: '#current',
-						activeLink: true,
-						expandSub: true
-					});
 				},
 				complete: function () {
 					this.events_sommaire_edit();
@@ -303,8 +285,33 @@
 					$('.sommaire_collection_bouton').remove();
 				}
 			});
-			$('#wrapper').off('click.sommaire_jstree_mode', 'a');
-
+		},
+		
+		_clone_save_sommaire_ul: function ($sommaire_elem) {
+			// nettoyer la liste des ins ajoutés par jstree
+			
+			//var $clone_sommaire_elem = this.$elem.find('.sommaire_collection > ul ').clone();
+			var $clone_sommaire_elem = $sommaire_elem.clone();
+			$clone_sommaire_elem.find('ins').remove();
+			$clone_sommaire_elem.find('li').removeAttr('id style').removeClass();
+			$clone_sommaire_elem.find('ul').removeAttr('style').removeClass();
+			$clone_sommaire_elem.find('a').removeAttr('style').removeClass('trigger active open');
+			$.ajax({
+				url: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/user_valide_collection_obj_sommaire/",
+				type: "POST",
+				data: {
+					page_nom: this.$elem.find('input[name="page_name"]').val(),
+					sommaire_collection: $clone_sommaire_elem.find('ul').html()
+				},
+				dataType: "json",
+				context: this,
+				success: function (ans) {
+				
+				},
+				complete: function () {
+					$clone_sommaire_elem.remove();
+				}
+			});
 		},
 
 		handler_new_object: function () {
@@ -313,11 +320,13 @@
 			var $new_obj_elem = $('<div>', {
 				id: 'new_object',
 				style: 'display:none'
-			}).load(WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/display_new_object_template/" + $current_page_name).appendTo(this.$elem);
-
-			$new_obj_elem.show('slide', {}, "easeOutQuint", function () {
+			})
+				.load(WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/display_new_object_template/" + $current_page_name, function () {
+					$(this).show('slide', {}, "easeOutQuint", function () {
 				that._ajax_form_new_object(this);
 			});
+				})
+				.appendTo(this.$elem);
 		},
 
 		_ajax_form_new_object: function (elem) {
@@ -349,7 +358,7 @@
 										}
 									}
 								}, function () {
-									alert('une entrée a été ajoutée au sommaire')
+									//alert('une entrée a été ajoutée au sommaire')
 								}, true);
 								$(this).parent().remove();
 
@@ -392,7 +401,7 @@
 				var editor = CKEDITOR.instances[that.$contenu_elem.attr('id')];
 				editor.on('instanceReady', function () {
 					// on clique pour valider les modif d'un objet'	
-					that.$button_edit_object_elem.one('click.edit_object', $.proxy(that.handler_user_valid_object, that));
+					that.$button_edit_object_elem.one('click.edit_object', $.proxy(that.handler_user_save_object, that));
 				});
 				
 				that.$button_edit_object_elem.button("option", "label", "Enregistrer");
@@ -404,16 +413,18 @@
 			//CKEDITOR.inlineAll();
 		},
 		
-		handler_user_valid_object: function () {
+		handler_user_save_object: function () {
 			var that = this;
+			var last_url_index = this.$objet_elem.find('input[name="url_index"]').val();
 			$.ajax({
 				url: WIKIDGLOBALS.BASE_DIRECTORY + 'index.php/collection_objets/user_save_object',
 				type: 'post',
 				data: {
-					page: that.$current_page_name,
+					sommaire_page: that.$current_page_name,
 					titre: that.$titre_elem.html(),
 					initial_index: that.$objet_elem.find('input[name="objet_index_initial"]').val(),
 					//contenu: $contenu_elem.html()
+					//url_index
 					contenu: CKEDITOR.instances[that.$contenu_elem.attr('id')].getData()
 				},
 				dataType: 'json',
@@ -444,9 +455,19 @@
 									that.$titre_elem.off('keypress.edit_object');
 									that.$contenu_elem.attr('contenteditable', 'false');
 									var editor = CKEDITOR.instances[that.$contenu_elem.attr('id')];
+								// changement de nom : répercuter le changement dans le sommaire.
+									if (ans.url_index !== last_url_index) {
+										var $sommaire_elem = that.$elem.find('#sommaire_collection_' + that.$current_page_name);
+										//console.info($sommaire_elem);
+										$sommaire_elem.find("a[href$='" + last_url_index + "']")
+											.html(ans.titre)
+											.attr('href', WIKIDGLOBALS.BASE_URL + "index.php/sync/show/" + ans.page_nom + "/" + ans.url_index);
+										that._clone_save_sommaire_ul($sommaire_elem);
+										
+									}
 							
 									editor.on('destroy', function () {
-										console.info(that.$button_edit_object_elem);
+										
 										that.$button_edit_object_elem
 											.button("option", "label", "Modifier");
 										that.events_object_edit();
@@ -456,7 +477,7 @@
 								else {
 							// validation ratée :: try again
 								that.$button_edit_object_elem
-									.one('click', $.proxy(that.handler_valid_object, that));
+									.one('click', $.proxy(that.handler_user_valid_object, that));
 								}
 							});
 					});
@@ -473,6 +494,7 @@
 				id: 'view_collection' + $current_page_name,
 				style: 'display:none'
 			}).load(WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/display_collection/" + $current_page_name).appendTo(this.$elem).show('slide', function () {
+				$(this).find('li').attr('rel', 'link');
 				$(this).jstree({
 					"ui": {
 						"select_limit": -1,
@@ -529,50 +551,11 @@
 							"action": function (obj) { //this.rename(obj);
 								console.info(this._get_parent(obj));
 							}
-						},
-						"create": {
-							"label": "Creer un noeud",
-							"action": function (obj) {
-								this.create(obj, "after");
-							}
-						},
-						*/
-							"lien vers": {
-								label: "Modifier le lien",
-								action: function (obj) {
-									var that = this;
-									var $lien = obj.children('a');
-									this.close_node(obj);
-									//var obj_closure = obj;
-									var $input = $('<input>', {
-										value: $lien.attr('href').split('#')[1]
-									});
-									var valide_handler = function () {
-											var $trimmed = $.trim($input.val());
-											$lien.attr('href', '#' + $trimmed);
-											$input.hide('scale', function () {
-												$(this).autocomplete('destroy').remove();
-												that.open_node(obj);
-											});
-										};
-
-									$input.autocomplete({
-										source: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/menu/get_pages_list/",
-										position: {
-											my: 'left top',
-											at: 'right top'
-										},
-										change: valide_handler,
-										create: function () {
-											$(this).autocomplete('search', ['']);
-										}
-									}).appendTo(obj).keypress(function (event) {
-										if (event.which === 13) {
-											valide_handler();
-										}
-									});
-								}
-							}
+						},*/
+						"create": false,
+						"rename": false,
+						"delete": false
+							
 						}
 					},
 					"crrm": {
