@@ -11,7 +11,6 @@
 			this.elem = elem;
 			this.$elem = $(elem);
 			this.$elem_menu = $('#menu', elem);
-			this.$menu_ul_elem = $('ul#menu_liste', elem);
 			
 			
 			this.$elem.addClass('wikid_jsTree');
@@ -27,6 +26,20 @@
 			on_refresh_callback : function () {}
 		},
 		//options par défault à remplir"
+		_get_menu_liste: function () {
+			return $('ul#menu_liste');
+		},
+		
+		bouton_edit_transfer_effect_init: function () {
+			var that = this;
+			this.$bouton_edit_mode.one('mouseover.transfer_effect', function () {
+				$(this).effect('transfer', {to: that.$elem_menu}, 1000, function () {
+	$.proxy(that.bouton_edit_transfer_effect_init(), that);
+				});
+				$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
+			});
+		},
+		
 		_build_dialog: function () {
 			var that = this;
 			
@@ -37,10 +50,9 @@
 			})	
 				.appendTo(this.$elem)
 				.button()
-				.css('background', this.string_couleur_target_rgba)
-				.on('mouseover', function () {
-					$(this).effect('transfer', {to: that.$menu_ul_elem, className: 'ui_transfer_effect_tooltip'}, 500);
-				})
+				.css('background', this.string_couleur_target_rgba);
+				
+			$('#bouton_menu_edit_mode').button('option', 'label', 'Modifier le Menu');
 			
 			
 			this.$menu_tree = $('<div>', {
@@ -55,17 +67,21 @@
 				.dialog({
 					autoOpen: false,
 					height: $(window).height(),
-					width: 750,
+					width: 900,
 					modal: false,
 					position: ['left', 'top'],
 					create: function (event, ui) {
-						//$(this).siblings('.ui-dialog-buttonpane').hide();
+						
 					},
 					open: function (event, ui) {
-						$(this).show('scale');
+						
+						$(this).dialog('widget').show('scale', function () {
+							$(this).dialog('widget').find('button').button('widget').css('background', that.string_couleur_target_rgba);
+						});
 					},
 					close: function () {
 						that.eventify_menu();
+						$(this).dialog('widget').hide('scale');
 					},
 					buttons: {
 						'Nouvelle page': function () {
@@ -75,6 +91,7 @@
 							}
 							else {
 								$new_page_elem.effect('highlight', {color: that.string_couleur_target_rgba}, 1000);
+								$new_page_elem.find('input').focus();
 							}
 							
 						},
@@ -99,6 +116,9 @@
 				.load(WIKIDGLOBALS.BASE_DIRECTORY + "index.php/pages/display_new_page_form/", function () {
 					$(this).show('slide', {}, "easeOutQuint", function () {
 						$new_page_elem.effect('highlight', {color: that.string_couleur_target_rgba}, 1000);
+						$(this).find('input').focus();
+						$(this).find('.buttonset').buttonset();
+						$(this).find('button').button('widget').css('background', that.string_couleur_target_rgba);
 						that._ajax_form_new_page(this);
 					});
 				})
@@ -124,20 +144,18 @@
 							if (ans.success) {
 								var $menu_tree_elem = $('#menu_tree_dialog').find('#menu_tree');
 								console.info($menu_tree_elem);
-								window.location.hash = ans.new_page_titre;
-								$menu_tree_elem.find('#menu_tree').jstree("create", null, "after", {
-									"attr": {
-										"rel": "link"
-									},
+								window.location.hash = ans.new_page_url_index;
+								$('#menu_tree').jstree("create", null, "after", {
+									
 									"data": {
 										"title": ans.new_page_titre,
 										"attr": {
 											"class": "link_page_wikid",
-											"href": WIKIDGLOBALS.BASE_URL + "index.php/sync/show/" + ans.new_page_titre
+											"href": ans.new_page_url_index
 										}
 									}
 								}, function () {
-									alert('une entrée a été ajoutée au menu')
+									alert(ans.new_page_titre + ' a été ajouté au menu')
 								}, true);
 								$(this).parent().remove();
 
@@ -168,17 +186,16 @@
 				// cree le formulaire
 				var form_content_html = [
 					'<fieldset style="display:block">',
-					'<legend>Node details</legend>',									
 					'<p>',					
-					'<label for="link">lien vers page</label>',
+					'<label for="link">Lien vers page:</label>',
 		    			'<input type="text" name="link" id="link" value="" size="25" class="required text ui-widget-content ui-corner-all" />',
 		    			'</p>',
 		    			'<p>',	
-		    			'<label for="titre">Titre du lien</label>',
+		    			'<label for="titre">Titre du lien:</label>',
 		    			'<input type="text" name="titre" id="titre" value="" size="25" class="required text ui-widget-content ui-corner-all" />',
 		    			'</p>',
 		    			'<p>',
-		    			'<label for="context">Contexte</label>',
+		    			'<label for="context">Contexte:</label>',
 		    			'<input type="text" name="context" id="context" value="" class="text ui-widget-content ui-corner-all" />',
 		    			'</p>',
 		    			/*'<p>',
@@ -186,7 +203,7 @@
 		    			//'<label for="node_thumbnail">thumbnail</label>',
 		    			'<input type="image" name="node_thumbnail" id="node_thumbnail" value="" class="ui-widget-content ui-corner-all" />',
 		    			'</p>',*/
-		    			'<p><input class="submit" type="submit" value="Submit"/></p>',
+		    			'<p><input class="submit" type="submit" value="Appliquer"/></p>',
 		    			'</fieldset>',
 		    			
 					].join('');
@@ -195,13 +212,15 @@
 					method: 'get',
 					action: ''
 				});
-				$form.append(form_content_html);
-				
-				var $div = $('<div>').append($form);
+				$form.append(form_content_html).draggable();
+				$form.find('input.submit').button().css('background', that.string_couleur_target_rgba);
+//				var $div = $('<div>', {
+//					id: 'jstree_menu_node_options'
+//				}).append($form);
 				//$form.appendTo($(this));
 				//$form.appendTo($('#menu_tree_dialog'));
 				$('#menu_tree_dialog')
-					.append($div)
+					.append($form)
 					.siblings('.ui-dialog-buttonpane').show();
 				$(':submit', $form).button();	
 				$('#link', $form)
@@ -304,6 +323,15 @@
 				$inputs.eq(2).val($.trim($selected_titre));
 				var $selected_context = $(data.rslt.obj.context).attr('title');
 				$inputs.eq(3).val($selected_context);
+				
+				$('#jstree_form').position({
+					my: "left top",
+					at: "right top",
+					of: $(data.rslt.obj.context).parent('li'),
+					using: function (css, calc) {
+						$('#jstree_form').animate(css, 200, "linear");
+					}
+				});
 				/*
 				var $selected_url_thumbnail = $(data.rslt.obj.context).parent('li').css('background-image');
 				if (!$selected_url_thumbnail || $selected_url_thumbnail === 'none') {
@@ -326,7 +354,7 @@
 				
 			})
 			.bind("create.jstree", function (e, data) {
-				$(data.rslt.obj).effect('highlight', {color: that.string_couleur_target_rgba}, 1000);
+				//$(data.rslt.obj).effect('highlight', {color: that.string_couleur_target_rgba}, 1000);
 			})
 			.jstree({
 				"ui": {
@@ -412,12 +440,12 @@
 //				},
 				"types": {
 					"max_children": -2,
-					"max_depth": -2,
-					"valid_children": ["categorie", "link"],
+					"max_depth": 2,
+					"valid_children": ["default", "categorie", "link"],
 					"types": {
 						// the default type
 						"default": {
-							"valid_children": "none",
+							"valid_children": ["default", "categorie", "link"],
 							// Bound functions - you can bind any other function here (using boolean or function)
 							//"select_node"	: true,
 							//"open_node"	: true,
@@ -452,7 +480,7 @@
 		},
 		
 		valide_jstree: function () {
-			var getjsons = this.$menu_tree.jstree("get_json", -1, ['style'], ['href', 'title']); 
+			var getjsons = this.$menu_tree.jstree("get_json", -1, [], ['href', 'title']); 
 			$.ajax({
 				url: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/menu/save_menu/",
 				type: "POST",
@@ -507,19 +535,21 @@
 	
 		eventify_menu: function () { // ajouter le hover pour modifier l'apparence du pointeur et indiquer une action possible'
 			//this.$elem.on('dblclick', $.proxy(this.handler_edit_mode, this));
-			
+			this.bouton_edit_transfer_effect_init();
 			this.$elem.one('click.edit_mode', '#bouton_menu_edit_mode', $.proxy(this.handler_edit_mode, this));
 			return this;
 		},	
 		
 		handler_edit_mode: function () {
 			var that = this;
-			this.$bouton_edit_mode.effect('transfer', {to: this.$elem_menu}, 600, function () {
+			that.$bouton_edit_mode.off('mouseover.transfer_effect');
+			this.$bouton_edit_mode.effect('transfer', {to: $('#menu')}, 600, function () {
 				if (that.$menu_tree.children().length === 0) {
 					that._init_jstree();
 				}
 				$('#menu_tree_dialog').dialog('open');
-			})
+			});
+			$('.ui-effects-transfer').css('background', this.string_couleur_target_rgba);
 		},
 		
 		purge: function (d) {

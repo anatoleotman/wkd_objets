@@ -9,6 +9,7 @@ class Pages extends CI_Controller {
 		$this->load->model('Users_model','', TRUE);
 		$this->load->model('Collection_objets_model','', TRUE);
 		$this->load->helper('date');
+		$this->load->helper('text');
 		$this->load->helper('html');
 		$this->load->helper('regex_wikid');
 	}
@@ -209,15 +210,18 @@ class Pages extends CI_Controller {
 		$current_user_id = $session_user_data['user_id'];
 		$new_page_titre = $this->input->post('titre_new_page', true);
 		$new_page_titre = trim($new_page_titre, ' ');
-		$new_page_titre = url_kill_apostrophes(url_normalize_str(strtolower($new_page_titre)));
-		$bool_already_exists = $this->Pages_model->check_if_already_exists('nom', $new_page_titre);
+		$new_page_url_index = url_kill_apostrophes(url_normalize_str(strtolower(convert_accented_characters($new_page_titre))));
+		// replace characters other than letters, numbers by ''
+       		$new_page_url_index = preg_replace('/([^_a-z0-9]+)/i', '', $new_page_url_index);
+		$bool_already_exists = $this->Pages_model->check_if_already_exists('nom', $new_page_url_index);
 		
 		if (!$bool_already_exists) {
-			$this->Pages_model->user_new_page($new_page_titre, $current_user_id);
+			$this->Pages_model->user_new_page($new_page_url_index, $current_user_id);
 		}
 		
 		$out['success'] = ($bool_already_exists) ? false : true;
 		$out['new_page_titre'] = $new_page_titre;
+		$out['new_page_url_index'] = $new_page_url_index;
 		echo json_encode($out);
 	}
 	

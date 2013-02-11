@@ -13,6 +13,34 @@
 	fontStyle: italic;
 }
 */
+
+<style type="text/css">
+
+  .clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+    }
+
+.clearfix {display: inline-block;}  /* for IE/Mac */
+
+</style><!-- main stylesheet ends, CC with new stylesheet below... -->
+
+<!--[if IE]>
+<style type="text/css">
+  .clearfix {
+    zoom: 1;     /* triggers hasLayout */
+    display: block;     /* resets display for IE/Win */
+    }  /* Only IE can see inside the conditional comment
+    and read this CSS rule. Don't ever use a normal HTML
+    comment inside the CC or it will close prematurely. */
+</style>
+<![endif]-->
+
+
+
 html{
 	
 }
@@ -32,6 +60,7 @@ body{
 	font-family:sans-serif;
 	font-size:1.35rem;
     	line-height:1.5;
+    	background-color: black;
 }
 .nojs{
 	background-color: #F3F3F3;
@@ -210,10 +239,12 @@ p{
 	font-family:"Maven Pro",sans-serif;
 	font-size:1.35rem;
     	line-height:1.5;
+    	float:left;
 }
 
-#jstree_form p {
-	font-size:1.1rem;
+#menu_tree_dialog input {
+	font-weight: bold;
+	font-style: italic;
 }
 
 #menu_liste li ul li:hover {
@@ -285,3 +316,9 @@ ul#menu_liste li a:hover{
 	position: relative;
 }
 
+.objet {
+	float:right;
+	width: 50%;
+	margin: 0;
+}
+}

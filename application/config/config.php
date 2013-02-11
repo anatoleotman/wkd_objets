@@ -21,7 +21,7 @@ $config['admin_email'] = 'jonny.oneagain@gmail.com';
 | path to your installation.
 |
 */
-$config['base_url']     = 'http://'.$_SERVER['HTTP_HOST'].'/wikid_objets2/';  
+$config['base_url']     = 'http://'.$_SERVER['HTTP_HOST'].'/wkd_objets/';  
 /*
 |--------------------------------------------------------------------------
 | Index File

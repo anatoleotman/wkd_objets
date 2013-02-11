@@ -118,15 +118,29 @@
 				},
 				success: function (ans) {
 					if (ans.success === true) {
-						$('#objet_' + ans.page_nom).hide("slide", { direction: 'down'}, "easeOutQuint", function() {
+						$('#objet_' + ans.page_nom).hide("slide", { direction: 'right'}, "easeOutQuint", function() {
 					  	 	$(this).empty();
 					  	 	//console.info($(ans.objet_contenu_html).children());
 					  	 	$(this).html($(ans.objet_contenu_html).children());
 							//$(this).html(ans.objet_contenu_html);
 							$(this).data('objet_nom', ans.objet_data.titre); // c'est la clé pour le plugin mode edit
-							$(this).find('button').button();
+							$(this).find('button')
+								.button()
+								.each(function () {
+								
+								var random_color1 = Math.floor(Math.random()*256);
+						   		var random_color2 = Math.floor(Math.random()*256);
+					   			var random_color3 = Math.floor(Math.random()*256);
+					   			var random_color4 = Math.random()*0.5;
+					   			var string_couleur_target_rgba = 'rgba(' 
+					   					+ random_color1 + ',' 
+					   					+ random_color2 + ',' 
+					   					+ random_color3 + ',' 
+					   					+ random_color4 + ')';
+								$(this).css('background', string_couleur_target_rgba);
+							});
 							//that._images_display_each_element(this); // affiche la page et ses images une par une
-							$(this).show("slide", {}, "easeOutQuint");
+							$(this).show("slide", {direction: 'left'}, "easeOutQuint");
 						});
 					}
 					else {
@@ -240,7 +254,7 @@
 					}
 					else {
 						var that = this;
-						this.$elem_contenu_wikid.hide("slide", { direction: 'down'}, "easeOutQuint", function() {
+						this.$elem_contenu_wikid.hide("slide", { direction: 'left'}, "easeOutQuint", function() {
 					  	 	$(this).empty();
 							$(this).html(ans.page_contenu);
 						
@@ -269,7 +283,7 @@
 								activeLink: true,
 								expandSub : true
 							});
-							$(this).show("slide", {}, "easeOutQuint", function () {
+							$(this).show("slide", {direction: 'right'}, "easeOutQuint", function () {
 							
 							});
 						});

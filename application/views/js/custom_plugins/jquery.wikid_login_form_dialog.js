@@ -94,6 +94,9 @@
 				.click(function() {
 					that.$elem_form_dialog.dialog( "open" );
 				});
+			this.$elem_show_login_button
+				.button('widget').css('background', 'rgba( 255, 255, 255, 0.3)');
+				
 			return this;
 		},
 		
@@ -147,12 +150,23 @@
 							//$( this ).dialog( "close" ); //pas la peine de toujours fermer le dialogue
 						}
 					},
-					Cancel: function() {
+					Cancel: function () {
 						$( this ).dialog( "close" );
 					}
 				},
-				close: function() {
+				open: function () {
+					$(this).dialog('widget').show('scale');
+				},
+				close: function () {
 					that.$elem_allFields.val( "" ).removeClass( "ui-state-error" );
+					$(this).dialog('widget').hide('scale');
+				},
+				create: function () {
+					$(this).dialog('widget').on("keyup", function (e) {
+						if (e.keyCode === 13) {
+						$('.ui-button', $(this)).first().click();
+						}
+					});
 				}
 			});
 		return this;

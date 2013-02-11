@@ -18,18 +18,24 @@ class Menu_model extends CI_Model {
     		return $query->result_array();		
 	}
 	
-	function save_json_menu($serialized_json_menu) {
+	function save_json_menu($serialized_json_menu, $user_id) {
 		// save entire serialized json jstree
-		$this->db->empty_table('menu_json');
+		//$this->db->empty_table('menu_json');
 		$data = array(
 			'id' => null,
-			'tableau_menu' => $serialized_json_menu
+			'tableau_menu' => $serialized_json_menu, 
+			'date' => time(),
+			'user_id' => $user_id
 		);
 		$this->db->insert('menu_json', $data);
 	}
 	
     	function get_json_menu() {
-		$query = $this->db->from('menu_json')->get();
+		$query = $this->db
+			->from('menu_json')
+			->order_by('date', 'desc')
+			->limit(1)
+			->get();
 		return $query->row_array();
 	}
 	

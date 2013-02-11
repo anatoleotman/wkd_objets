@@ -9,6 +9,7 @@ class Upload extends CI_Controller {
     protected $path_url_img_thumb_upload_folder;
 
     protected $delete_img_url;
+    protected $resolution_available;
 
   function __construct() {
         parent::__construct();
@@ -17,7 +18,7 @@ class Upload extends CI_Controller {
 //Set relative Path with CI Constant
         $this->setPath_img_upload_folder("upload/img/");
         $this->setPath_img_thumb_upload_folder("upload/img/thumbnails/");
-
+	$this->setPath_img_background_upload_folder("upload/img/background/");
         
 //Delete img url
         $this->setDelete_img_url(base_url() . 'index.php/upload/deleteImage/');
@@ -26,6 +27,7 @@ class Upload extends CI_Controller {
 //Set url img with Base_url()
         $this->setPath_url_img_upload_folder(base_url() . "upload/img/");
         $this->setPath_url_img_thumb_upload_folder(base_url() . "upload/img/thumbnails/");
+        $this->setPath_url_img_background_upload_folder(base_url() . "upload/img/background/");
   }
 
   public function index() {
@@ -64,9 +66,42 @@ class Upload extends CI_Controller {
             $config['width'] = 193;
             $config['height'] = 94;
 
-            $this->load->library('image_lib', $config);
-
+            $this->load->library('image_lib');
+            $this->image_lib->clear();
+            $this->image_lib->initialize($config);
             $this->image_lib->resize();
+            $this->image_lib->clear();
+	// anatole
+	
+	$this->resolution_available = array(
+		1024, 1280, 1366,
+		1400, 1680, 1920,
+		2560, 3840, 4860
+	);
+	$background_folder_path = $this->getPath_img_background_upload_folder();
+	$img_folder_path = $this->getPath_img_upload_folder();
+	foreach ($this->resolution_available as $value) {
+		
+		$width_string = (string)$value;
+		$config2['new_image'] = $background_folder_path.$width_string.$name;
+		$config2['image_library'] = 'gd2';
+		$config2['source_image'] = $img_folder_path . $name;
+		$config2['create_thumb'] = FALSE;
+		$config2['maintain_ratio'] = TRUE;
+		$config2['width'] = $value;
+		$config2['height'] = 600;
+		$this->image_lib->clear();
+		$this->image_lib->initialize($config2);
+                $this->image_lib->resize();
+                if ( ! $this->image_lib->resize())
+		{
+		    echo $this->image_lib->display_errors();
+		}
+                
+	}
+	unset($value);
+	
+
 
            $data = $this->upload->data();
 
@@ -127,10 +162,15 @@ class Upload extends CI_Controller {
         
         $success = unlink($this->getPath_img_upload_folder() . $file);
         $success_th = unlink($this->getPath_img_thumb_upload_folder() . $file);
+        
+        // anatole
+        foreach ($this->resolution_available as $value) {
+        	$success_background[] = unlink($this->getPath_img_background_upload_folder() . (string)$value.$file);
+        }
 
         //info to see if it is doing what it is supposed to	
         $info = new stdClass();
-        $info->sucess = $success;
+        $info->success = $success;
         $info->path = $this->getPath_url_img_upload_folder() . $file;
         $info->file = is_file($this->getPath_img_upload_folder() . $file);
         if (IS_AJAX) {//I don't think it matters if this is set but good for error checking in the console/firebug
@@ -230,6 +270,22 @@ class Upload extends CI_Controller {
     public function setDelete_img_url($delete_img_url) {
         $this->delete_img_url = $delete_img_url;
     }
+// anatole
+	public function getPath_img_background_upload_folder() {
+	return $this->path_img_background_upload_folder;
+	}
+
+	public function setPath_img_background_upload_folder($path_img_background_upload_folder) {
+	$this->path_img_background_upload_folder = $path_img_background_upload_folder;
+	}
+	
+	public function getPath_url_img_background_upload_folder() {
+	return $this->path_url_img_background_upload_folder;
+	}
+
+	public function setPath_url_img_background_upload_folder($path_url_img_background_upload_folder) {
+	$this->path_url_img_background_upload_folder = $path_url_img_background_upload_folder;
+	}
 
 
 }

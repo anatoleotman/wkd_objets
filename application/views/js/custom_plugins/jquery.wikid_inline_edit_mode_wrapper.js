@@ -53,19 +53,32 @@
 				'background-color': this.string_couleur_target_rgba,
 				'z-index': 2
 			});
-			this.$bouton_edit_mode.on('mouseover', function () {
-				$(this).effect('transfer', {
-					to: that._get_elem_contenu_ckeditable(),
-					className: "ui_transfer_effect_tooltip"
-				}, 500);
-			});
+//			this.$bouton_edit_mode.on('mouseover', function () {
+//				$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
+//				$(this).effect('transfer', {
+//					to: that._get_elem_contenu_ckeditable(),
+//					className: "ui_transfer_effect_tooltip"
+//				}, 800);
+//			});
 			return this;
 		},
 
 		_events_edit_mode_init: function () {
 
 			this.$elem.one('click.edit_mode', '#bouton_edit_mode_' + this.contenu_wikidable_elem_ID, $.proxy(this.handler_edit_mode_init, this));
+			this.bouton_edit_transfer_effect_init();
 			return this;
+		},
+		
+		bouton_edit_transfer_effect_init: function () {
+			var that = this;
+			this.$bouton_edit_mode.one('mouseover.transfer_effect', function () {
+//				$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
+				$(this).effect('transfer', {to: that._get_elem_contenu_ckeditable()}, 1000, function () {
+					$.proxy(that.bouton_edit_transfer_effect_init(), that);
+				});
+				$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
+			});
 		},
 
 		handler_edit_mode_init: function (event) {
@@ -73,6 +86,8 @@
 							"index.php/pages/edit_mode_init/" + 
 							this.$elem_contenu_wikid.data('page_nom') + 
 							'#wikid_input' );*/
+			this.$bouton_edit_mode.off('mouseover.transfer_effect');
+							
 			$.ajax({
 				url: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/pages/edit_mode_inline_init/" + this.$elem_contenu_wikid.data('page_nom'),
 				//.data('page_nom') c'est la clef de voute
@@ -91,6 +106,7 @@
 				},
 				complete: function () {
 					this.$bouton_edit_mode.spin(false);
+					this.$bouton_edit_mode.off('mouseover.transfer_effect');
 					this._init_ckeditor();
 				}
 			});
@@ -107,7 +123,8 @@
 				event.preventDefault();
 				event.stopPropagation();
 			});
-			console.info(this._get_elem_contenu_ckeditable().html());
+			//console.info(this._get_elem_contenu_ckeditable().html());
+			
 			this.$bouton_edit_mode.effect("transfer", {
 				to: this._get_elem_contenu_ckeditable()
 			}, 800, function () {
@@ -127,7 +144,6 @@
 						'background': 'none',
 						'background-color': that.string_couleur_target_rgba
 					});
-
 				});
 				editor.on('blur', function (e) {
 					$('.cke_wrapper').css('background-color', 'transparent');
@@ -305,7 +321,7 @@
 					};
 				});
 			});
-
+			$('.ui-effects-transfer').css('background', this.string_couleur_target_rgba);
 		},
 
 		_events_valid_page: function () {
@@ -363,7 +379,7 @@
 				});
 
 			});
-
+			$('.ui-effects-transfer').css('background', this.string_couleur_target_rgba);
 
 		},
 

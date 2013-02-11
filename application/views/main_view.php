@@ -9,7 +9,7 @@
 
 
 
-<link rel="stylesheet" type="text/css" href="<?=parse_url($base_url, PHP_URL_PATH);?>application/css/wikid_site_pedaloivre.css"/>
+<link rel="stylesheet" type="text/css" href="<?=parse_url($base_url, PHP_URL_PATH);?>application/css/wikid_larimogene.css"/>
 <link rel="stylesheet" type="text/css" href="<?=parse_url($base_url, PHP_URL_PATH);?>application/css/wikid_jstree_custom_plugin.css"/>
 <link rel="stylesheet" type="text/css" href="<?=parse_url($base_url, PHP_URL_PATH);?>application/css/jquery.ui.all.css"/>
 
@@ -24,7 +24,8 @@ if ($logged) { ?>
 
 </head>
 
-<body id="body_principal">
+<body id="body_principal" class='filter'>
+<img id="bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" style="position: fixed; left: 0; right: 0; bottom: 0" />
 
 	<div id="wrapper" class="nojs">	
 	<script type="text/javascript">
@@ -33,26 +34,31 @@ if ($logged) { ?>
 		(function (B,C) {
 			B[C] = B[C].replace(/\bnojs\b/,'js');
 		}(document.getElementById('wrapper'),'className'));
-	</script>	
+	</script>
+		<div id="menu_cadre" class="clearfix filter">
+			<div id="menu" class="menu clearfix"><?=$menu;?>
+			</div>
+		</div>
+		<div id="social_wrapper">  
+			<?=$social_nets;?>
+		</div>
 		
 		<div id="header_cadre" class="wrapper_wikidable">  
 			<div id="header" class="contenu_wikid"><?=$entete['contenu'];?></div>
 			<input type="hidden" name="page_name" value="<?=$entete['nom'];?>"/>
 		</div>
 		
-		<div id="menu_cadre">
-			<div id="menu" class="menu"><?=$menu;?></div>		
-		</div>
-		
-		<div id="page_cadre" class="wrapper_wikidable">
-			 <div id="page" class="contenu_wikid"><?=$page['contenu'];?></div>
-			 <input type="hidden" name="page_name" value="<?=$page['nom'];?>"/>
-		</div>
-		
 		<div id="footer_cadre" class="wrapper_wikidable">
 			 <div id="footer" class="contenu_wikid"><?=$pied_page['contenu'];?></div>
 			 <input type="hidden" name="page_name" value="<?=$pied_page['nom'];?>"/>
 		</div>	
+		
+		<div id="page_cadre" class="wrapper_wikidable">
+			 <div id="page" class="contenu_wikid clearfix"><?=$page['contenu'];?></div>
+			 <input type="hidden" name="page_name" value="<?=$page['nom'];?>"/>
+		</div>
+		
+		
 			
 	</div>
 </body>
@@ -71,7 +77,7 @@ if ($logged) { ?>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-ui-1.8.21.custom.min.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.color.js"></script>
-<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.easing.1.3.js"></script>
+<!--<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.easing.1.3.js"></script>-->
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.approach.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.hashchange.min.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/spin.min.js"></script>

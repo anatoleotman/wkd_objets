@@ -69,6 +69,7 @@
 					},
 					text: true
 				});
+			this.$show_upload_menu_button.button('widget').css('background', 'rgba( 255, 255, 255, 0.3)');
 			this.$show_upload_menu_button.appendTo(this.$upload_wrapper);
 			$('#wrapper').append(this.$upload_wrapper); //on peut aussi attacher au body
 			this.$show_upload_menu_button.on('click', $.proxy(this.show_upload_dialog, this));

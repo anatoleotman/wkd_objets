@@ -109,13 +109,17 @@ class Menu extends CI_Controller {
 	
 	public function save_menu () {
 		//ajax save jstree menu
-		$this->security_check_logged_in_or_exit();  	
+		$this->security_check_logged_in_or_exit(); 
+		
+		
+		$session_user_data = $this->Users_model->get_session_user_data();
+		$current_user_id = $session_user_data['user_id'];	
   	
-  		$nouveau_menu = $this->input->post('menu');
+  		$nouveau_menu = $this->input->post('menu', true);
   		//print_r($nouveau_menu);
   		$serialized_nouveau_menu = serialize($nouveau_menu);
   		//print_r($serialized_nouveau_menu);
-  		$this->Menu_model->save_json_menu($serialized_nouveau_menu);
+  		$this->Menu_model->save_json_menu($serialized_nouveau_menu, $current_user_id);
   		// empty menu_json table and save entire serialized json tree
   		// parcours le tableau reçu 
   		$this->Menu_model->empty_menu();

@@ -9,6 +9,7 @@ class Collection_objets extends CI_Controller {
 		$this->load->model('Collection_objets_model','', TRUE);
 		$this->load->library('form_validation');
 		$this->load->helper('date');
+		$this->load->helper('text');
 		$this->load->helper('html');
 		$this->load->helper('regex_wikid');
 	}
@@ -136,7 +137,12 @@ class Collection_objets extends CI_Controller {
 			$titre = $this->input->post('titre', true);
 			$sommaire_page = $this->input->post('sommaire_page', true);
 			//user_save_object ($collection_nom, $initial_index, $titre, $url_index, $contenu, $user_id)
-			$url_index = url_kill_apostrophes(url_normalize_str(strtolower($titre)));
+			$titre = preg_replace('/&nbsp;|&amp;|\n/', '', $titre);
+			//$titre = convert_accented_characters($titre);
+			$url_index = url_kill_apostrophes(url_normalize_str(strtolower(convert_accented_characters(trim(strip_tags($titre))))));
+			// replace characters other than letters, numbers by ''
+       			$url_index = preg_replace('/([^_a-z0-9]+)/i', '', $url_index);
+			//$url_index = preg_replace("[^A-Za-z0-9]", "", $titre);	
 			$data = $this->Collection_objets_model->user_save_object($sommaire_page, $init_index, $titre, $url_index, $contenu, $current_user_id);
 			$out = array_merge($out, $data);
 		}
@@ -147,6 +153,7 @@ class Collection_objets extends CI_Controller {
 	}
 	
 	public function is_only_whitespaces ($str) {
+		$str = trim($str, '&nbsp;');
 		if (preg_match('/^((?:&nbsp;|\s)+.*?)&nbsp;/', $str)) { // the string is only whitespace
 			$this->form_validation->set_message('is_only_whitespaces', 'le titre ne peut être que des espaces blancs');
 			return false;

@@ -26,7 +26,8 @@
 		_init_buttons: function () {
 			//var $buttons = this.$elem.find('button').button();
 			//
-			this.$elem.find("#bouton_sommaire_collection").button().css('background', this.string_couleur_target_rgba);
+			this.$elem.find("#bouton_sommaire_collection").button();
+			this.$elem.find("#bouton_sommaire_collection").button('widget').css('background', this.string_couleur_target_rgba);
 			this.$elem.find('#bouton_edit_objet').button();
 
 			return this;
@@ -43,29 +44,60 @@
 		
 		events_sommaire_edit: function () { // ajouter le hover pour modifier l'apparence du pointeur et indiquer une action possible'
 			this.$elem.one('click.sommaire_jstree_mode', '#bouton_sommaire_collection', $.proxy(this.handler_sommaire_edit_mode, this));
-
+			this.bouton_sommaire_edit_transfer_effect_init();		
 			return this;
 		},
 		
+		bouton_sommaire_edit_transfer_effect_init: function () {
+			var that = this;
+			
+			this.$elem.one('mouseover.sommaire_transfer_effect', '#bouton_sommaire_collection', function (e) {
+				var color = that.$elem.find('#bouton_sommaire_collection').button('widget').css('background');
+				$(e.target).effect('transfer', {to: that.$elem.find('.sommaire_collection').find('ul'), className: "ui_transfer_effect_tooltip"}, 1000, function () {
+	$.proxy(that.bouton_sommaire_edit_transfer_effect_init(), that);
+				});
+				$('.ui-effects-transfer').css('background', color);
+				
+			});
+		},
+		
 		events_object_edit: function () {
-			//var that = this;
+			var that = this;
 			this.$current_page_name = this.$elem.find('input[name="page_name"]').val();
 			this.$objet_elem = this.$elem.find('#objet_' + this.$current_page_name);
 			this.$button_edit_object_elem = $('#bouton_edit_objet'); 
-//			this.$button_edit_object_elem.on('hover', function () {
-//				$(this).effect('transfer', {to: that.$elem.find('#objet_' + that.$current_page_name), className: "ui_transfer_effect_tooltip"}, 1000);
-//			});
 			
-			
+			this.bouton_objet_edit_transfer_effect_init();
 			this.$elem.one('click.sommaire_jstree_mode', '#bouton_edit_objet', $.proxy(this.handler_edit_object, this));
+		},
+		
+		bouton_objet_edit_transfer_effect_init: function () {
+			var that = this;
+			$(this).off('.transfer_effect');
+			this.$elem.one('mouseover.transfer_effect', '#bouton_edit_objet', function (e) {
+				
+				var color_string = $('#bouton_edit_objet').css('background');
+				$(e.target).effect('transfer', {to: that.$elem.find('.objet_titre'), className: "ui_transfer_effect_tooltip"}, 600, function () {
+					
+					$(e.target).effect('transfer', {to: that.$elem.find('.objet_contenu'), className: "ui_transfer_effect_tooltip"}, 800, function () {
+						$.proxy(that.bouton_objet_edit_transfer_effect_init(), that);
+					});
+					$('.ui-effects-transfer').css('background', color_string);
+				});
+				$('.ui-effects-transfer').css('background', color_string);
+				
+				
+			});
 		},
 		
 		handler_sommaire_edit_mode: function (e) {
 			var that = this;
+			this.$elem.off('.sommaire_transfer_effect');
 			this.$current_page_name = this.$elem.find('input[name="page_name"]').val();
 			this.$sommaire_elem = this.$elem.find('#sommaire_collection_' + this.$current_page_name);
-			this.$elem.find('#bouton_sommaire_collection').effect("transfer", { to: this.$sommaire_elem  }, 800, function () {
+			this.$elem.find('#bouton_sommaire_collection').effect("transfer", { to: this.$sommaire_elem.find('ul')  }, 1000, function () {
 				that._init_sommaire_jstree();
+				
 				$('#wrapper').on('click.sommaire_jstree_mode', 'a', function (event) {
 					event.preventDefault();
 					event.stopPropagation();
@@ -281,7 +313,7 @@
 				},
 				complete: function () {
 					this.events_sommaire_edit();
-					this.$elem.find('#bouton_sommaire_collection').button("option", "label", "Modifier");
+					this.$elem.find('#bouton_sommaire_collection').button("option", "label", "Modifier collection");
 					$('.sommaire_collection_bouton').remove();
 				}
 			});
@@ -380,6 +412,7 @@
 
 		handler_edit_object: function () {
 			var that = this;
+			//this.$elem.off('mouseover.transfer_effect');
 			this.$current_page_name = this.$elem.find('input[name="page_name"]').val();
 			this.$objet_elem = this.$elem.find('#objet_' + this.$current_page_name);
 			this.$titre_elem = this.$objet_elem.find('.objet_titre');
@@ -395,6 +428,17 @@
 					}
 				});
 			});
+			
+			// on s'assure de désactiver les liens cliquables
+			$('#wrapper').on('click.sommaire_collection', 'a', function (event) {
+				event.preventDefault();
+				event.stopPropagation();
+			});
+			$('.accordion').find('a').on('click.sommaire_collection', function (event) {
+				event.preventDefault();
+				event.stopImmediatePropagation();
+			});
+			
 			this.$button_edit_object_elem.effect("transfer", { to: that.$contenu_elem  }, 1200, function () {
 				that.$contenu_elem.attr('contenteditable', 'true');
 				CKEDITOR.inline(that.$contenu_elem.attr('id'));
@@ -402,6 +446,7 @@
 				editor.on('instanceReady', function () {
 					// on clique pour valider les modif d'un objet'	
 					that.$button_edit_object_elem.one('click.edit_object', $.proxy(that.handler_user_save_object, that));
+					that.$elem.off('mouseover.transfer_effect');
 				});
 				
 				that.$button_edit_object_elem.button("option", "label", "Enregistrer");
@@ -455,6 +500,8 @@
 									that.$titre_elem.off('keypress.edit_object');
 									that.$contenu_elem.attr('contenteditable', 'false');
 									var editor = CKEDITOR.instances[that.$contenu_elem.attr('id')];
+									$('#wrapper').off('click.sommaire_collection', 'a');
+									$('.accordion').find('a').off('click.sommaire_collection');
 								// changement de nom : répercuter le changement dans le sommaire.
 									if (ans.url_index !== last_url_index) {
 										var $sommaire_elem = that.$elem.find('#sommaire_collection_' + that.$current_page_name);
@@ -464,20 +511,22 @@
 											.attr('href', WIKIDGLOBALS.BASE_URL + "index.php/sync/show/" + ans.page_nom + "/" + ans.url_index);
 										that._clone_save_sommaire_ul($sommaire_elem);
 										
+										
 									}
 							
 									editor.on('destroy', function () {
 										
 										that.$button_edit_object_elem
 											.button("option", "label", "Modifier");
+										that.$elem.off('.transfer_effect');
 										that.events_object_edit();
 									});
 									editor.destroy(true);
 								}
 								else {
 							// validation ratée :: try again
-								that.$button_edit_object_elem
-									.one('click', $.proxy(that.handler_user_valid_object, that));
+								$('#bouton_edit_objet')
+									.one('click', $.proxy(that.handler_user_save_object, that));
 								}
 							});
 					});

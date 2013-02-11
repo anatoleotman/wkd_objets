@@ -1,8 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 //wikid configs for preg_replace helpers
-$config['paypal_email'] = 'dummy_paypal_email';
-$config['admin_email'] = 'dummy_admin_email';
+$config['paypal_email'] = 'jonny._1331103369_biz@gmail.com';
+$config['admin_email'] = 'jonny.oneagain@gmail.com';
 
 
 
@@ -21,8 +21,7 @@ $config['admin_email'] = 'dummy_admin_email';
 | path to your installation.
 |
 */
-//$config['base_url']	= 'http://localhost/wicked8/';
-$config['base_url']     = 'http://'.$_SERVER['HTTP_HOST'].'/wicked8/';  
+$config['base_url']     = 'http://'.$_SERVER['HTTP_HOST'].'/wkd_objets/';  
 /*
 |--------------------------------------------------------------------------
 | Index File
