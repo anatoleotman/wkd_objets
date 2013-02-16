@@ -34,7 +34,9 @@ class Build_html_menu {
 	          			$menu .= "</li>";	
         			}
 	          	}
-	          	$menu .= "</ul>";	
+	          	
+	          	$menu .= "</ul>";
+	          	$menu .= '<span class="stretch"></span>';	
 	         }
 	         return $menu;
 	}

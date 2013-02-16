@@ -125,14 +125,14 @@ class Collection_objets extends CI_Controller {
 		$session_user_data = $this->Users_model->get_session_user_data();
 		$current_user_id = $session_user_data['user_id'];
 		$this->form_validation->set_rules('titre', 'Titre', 'trim|strip_tags|callback_is_only_whitespaces|required|xss_clean');
-		$this->form_validation->set_rules('contenu', 'Contenu', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('contenu', 'Contenu', 'trim|required');
 		if($this->form_validation->run() == FALSE) {
 			$out['validation_message'] = validation_errors();
 			$out['validation_success'] = false;
 		} else {
 			$out['validation_message'] = 'object is OK';
 			$out['validation_success'] = true;
-			$contenu = $this->input->post('contenu', true);
+			$contenu = $this->input->post('contenu');
 			$init_index = $this->input->post('initial_index', true);
 			$titre = $this->input->post('titre', true);
 			$sommaire_page = $this->input->post('sommaire_page', true);

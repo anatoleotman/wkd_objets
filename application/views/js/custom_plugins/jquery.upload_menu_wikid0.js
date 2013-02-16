@@ -151,7 +151,7 @@
 						dataType: 'json',
 						context: this,
 						success : function (data) {
-							console.info(data);
+							//console.info(data);
 							var fu = $('#fileupload').data('fileupload'); 
 							var template;
 							fu._adjustMaxNumberOfFiles(-data.length);

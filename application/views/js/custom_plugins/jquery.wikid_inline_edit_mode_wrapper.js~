@@ -53,13 +53,6 @@
 				'background-color': this.string_couleur_target_rgba,
 				'z-index': 2
 			});
-//			this.$bouton_edit_mode.on('mouseover', function () {
-//				$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
-//				$(this).effect('transfer', {
-//					to: that._get_elem_contenu_ckeditable(),
-//					className: "ui_transfer_effect_tooltip"
-//				}, 800);
-//			});
 			return this;
 		},
 
@@ -67,27 +60,84 @@
 
 			this.$elem.one('click.edit_mode', '#bouton_edit_mode_' + this.contenu_wikidable_elem_ID, $.proxy(this.handler_edit_mode_init, this));
 			this.bouton_edit_transfer_effect_init();
+			this._bouton_edit_position_effect_init();
 			return this;
 		},
 		
 		bouton_edit_transfer_effect_init: function () {
 			var that = this;
-			this.$bouton_edit_mode.one('mouseover.transfer_effect', function () {
-//				$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
-				$(this).effect('transfer', {to: that._get_elem_contenu_ckeditable()}, 1000, function () {
-					$.proxy(that.bouton_edit_transfer_effect_init(), that);
-				});
-				$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
+			this.$bouton_edit_mode
+				.button('widget')
+				.one('mouseenter.transfer_effect', function () {
+	//				$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
+					$(this).stop('true', 'true');
+					$("#custom_style").html("<style type='text/css'> .transfer_effect_custom { background:" + that.string_couleur_target_rgba + ";} </style>");
+					$(this).effect('transfer', {to: that._get_elem_contenu_ckeditable(), className: 'transfer_effect_custom' }, 800, function () {
+						$(this).stop('true');
+						$.proxy(that.bouton_edit_transfer_effect_init(), that);
+					});
+					//$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
 			});
+		},
+		
+		_bouton_edit_position_effect_init: function () {
+			var that = this;
+//			$("<span>", {
+//					'class': 'pageCoords'
+//				}).appendTo(this.$elem);
+//				
+			this.$elem.on('mousemove.bouton_position_effect', this._get_elem_contenu_ckeditable(), function (mouseOver_event) {
+				//var parentOffset = $(this).parent().offset(); 
+				//or $(this).offset(); if you really just want the current element's offset
+				var parentOffset = that.$elem.offset();
+				var relX = mouseOver_event.pageX - parentOffset.left - 10;
+				var relY = mouseOver_event.pageY - parentOffset.top;
+				var $target_elem = $(mouseOver_event.target);
+//				var pageCoords = "( " + relX + ", " + relY + " )";
+//				that.$elem.find('.pageCoords').text("( e.pageX, e.pageY ) : " + pageCoords);
+//				that.$elem.find('.clientCoords').text("( e.clientX, e.clientY ) : " + clientCoords);
+//				that.$bouton_edit_mode
+//					.button('widget')
+//					.stop('true')
+//					.position({
+//						my: "top center",
+//						at: "bottom left+"+relX.toString(),
+//						of: $target_elem,
+//						using: function (css, calc) {
+//							that.$bouton_edit_mode
+//								.button('widget')
+//								.animate(css, "400", "easeOutQuint");
+//					}
+//				});
+				that.$bouton_edit_mode
+					.button('widget')
+					.stop()
+					.animate({left: relX.toString()+"px"}, 'slow');
+
+			});
+//			this.$elem.on('mouseout', this._get_elem_contenu_ckeditable(), function (mouseleave_event) {
+//				that.$bouton_edit_mode
+//					//.button('widget')
+//					.stop()
+//					.position({
+//						my: "top left",
+//						at: "bottom left",
+//						of: that.$elem,
+//						using: function (css, calc) {
+//							that.$bouton_edit_mode
+////								.button('widget')
+//								.animate(css, "400", "easeOutQuint");
+//					}
+//				});
+//			});
+			return this;
 		},
 
 		handler_edit_mode_init: function (event) {
 /*this.$wikid_form.load(	WIKIDGLOBALS.BASE_DIRECTORY + 
 							"index.php/pages/edit_mode_init/" + 
 							this.$elem_contenu_wikid.data('page_nom') + 
-							'#wikid_input' );*/
-			this.$bouton_edit_mode.off('mouseover.transfer_effect');
-							
+						'#wikid_input' );*/
 			$.ajax({
 				url: WIKIDGLOBALS.BASE_DIRECTORY + "index.php/pages/edit_mode_inline_init/" + this.$elem_contenu_wikid.data('page_nom'),
 				//.data('page_nom') c'est la clef de voute
@@ -106,6 +156,12 @@
 				},
 				complete: function () {
 					this.$bouton_edit_mode.spin(false);
+					this.$bouton_edit_mode.stop('true');
+					//this.$bouton_edit_mode.off('.transfer_effect');
+					this.$elem.off('mousemove.bouton_position_effect');
+						// cacher le bouton edit_mode
+				//this.$bouton_edit_mode.stop('true');
+				//this.$bouton_edit_mode.hide('scale');
 					this._init_ckeditor();
 				}
 			});
@@ -120,18 +176,48 @@
 			// on s'assure de désactiver les liens cliquables
 			$('#wrapper').on('click.div_wikidable', 'a', function (event) {
 				event.preventDefault();
-				event.stopPropagation();
+				event.stopImmediatePropagation();
+			});
+			this.$elem.find('a').on('click.div_wikidable', function () {
+				event.preventDefault();
+				event.stopImmediatePropagation();
 			});
 			//console.info(this._get_elem_contenu_ckeditable().html());
-			
+			$("#custom_style").html("<style type='text/css'> .transfer_effect_custom { background:" + that.string_couleur_target_rgba + ";} </style>");
+			this.$bouton_edit_mode.stop('true');
 			this.$bouton_edit_mode.effect("transfer", {
-				to: this._get_elem_contenu_ckeditable()
+				to: this._get_elem_contenu_ckeditable(), className:'transfer_effect_custom'
 			}, 800, function () {
-				// cacher le bouton edit_mode
-				$(this).hide('scale');
+				
 				// create Ckeditor instance 
 				that._get_elem_contenu_ckeditable().attr('contenteditable', 'true');
-				CKEDITOR.inline(that._get_elem_contenu_ckeditable().attr('id'));
+				CKEDITOR.inline(that._get_elem_contenu_ckeditable().attr('id'), {
+					toolbarGroups: [
+						{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+						{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+						{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+						{ name: 'links' },
+						{ name: 'insert' },
+						{ name: 'forms' },
+						{ name: 'tools' },
+						{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+						{ name: 'others' },
+						'/',
+						{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+						{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
+						{ name: 'styles' },
+						{ name: 'colors' },
+						{ name: 'about' }
+					],
+					extraPlugins: 'sourcearea,oembed,tableresize',
+					//config.toolbar = [['oembed']];
+					oembed_WrapperClass: 'embededContent',
+					oembed_maxWidth: '100',
+					oembed_maxHeight: '',
+					filebrowserBrowseUrl: WIKIDGLOBALS.BASE_DIRECTORY + 'application/third_party/ckeditor/filemanager/index.html'
+
+					// NOTE: Remember to leave 'toolbar' property with the default value (null).
+				});
 				var editor = CKEDITOR.instances[that._get_elem_contenu_ckeditable().attr('id')];
 				editor.on('instanceReady', $.proxy(that._events_valid_page, that));
 				editor.on('instanceReady', function () {
@@ -320,7 +406,7 @@
 					};
 				});
 			});
-			$('.ui-effects-transfer').css('background', this.string_couleur_target_rgba);
+//			$('.ui-effects-transfer').css('background', this.string_couleur_target_rgba);
 		},
 
 		_events_valid_page: function () {
@@ -384,15 +470,18 @@
 
 		_close_ckeditor: function () {
 			var that = this;
+			this.$elem.find('a').off('click.div_wikidable');
 			// libérer les ressources et références
 			var editor = CKEDITOR.instances[this._get_elem_contenu_ckeditable().attr('id')];
 			editor.on('destroy', $.proxy(this.handler_destroy_ckeditor, this));
 			editor.destroy(true);
 			this._get_elem_contenu_ckeditable().attr('contenteditable', 'false');
 			this.$bouton_cancel.empty();
+			
 			// poser un breakpoint faire le test pour voir ce que devient la reference
 			this.$wikid_options.hide('scale', function () {
 				$(this).remove();
+				
 			});
 			// afficher le bouton edit_mode
 			this.$bouton_edit_mode.show();
@@ -404,6 +493,7 @@
 			if (!Object.keys(CKEDITOR.instances).length) {
 				// désactiver interception des click
 				$('#wrapper').off('click.div_wikidable', 'a');
+				
 			} else { // focus sur ckeditor si autre instance ouverte
 				for (var key in CKEDITOR.instances) {
 					CKEDITOR.instances[key].focus();

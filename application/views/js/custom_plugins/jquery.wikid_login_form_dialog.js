@@ -141,8 +141,9 @@
 									}
 									if(ans.success) {		
 							  			that.updateTips('access granted');
-							  			that.$elem_form_dialog.parent().effect("bounce", {times: 1}, 80);
-							  			location.reload();
+							  			that.$elem_form_dialog.parent().effect("bounce", {times: 1}, 80, function () {
+							  				location.reload();
+							  			});
 							  			//window.setTimeout('location.reload()', 20);//recharge la page
 							  		}						  		
 							 	}

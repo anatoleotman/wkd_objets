@@ -132,7 +132,7 @@ class Collection_objets extends CI_Controller {
 		} else {
 			$out['validation_message'] = 'object is OK';
 			$out['validation_success'] = true;
-			$contenu = $this->input->post('contenu', true);
+			$contenu = $this->input->post('contenu');
 			$init_index = $this->input->post('initial_index', true);
 			$titre = $this->input->post('titre', true);
 			$sommaire_page = $this->input->post('sommaire_page', true);
@@ -141,7 +141,7 @@ class Collection_objets extends CI_Controller {
 			//$titre = convert_accented_characters($titre);
 			$url_index = url_kill_apostrophes(url_normalize_str(strtolower(convert_accented_characters(trim(strip_tags($titre))))));
 			// replace characters other than letters, numbers by ''
-       			$url_index = preg_replace('/([^a-z0-9]+)/i', '', $url_index);
+       			$url_index = preg_replace('/([^_a-z0-9]+)/i', '', $url_index);
 			//$url_index = preg_replace("[^A-Za-z0-9]", "", $titre);	
 			$data = $this->Collection_objets_model->user_save_object($sommaire_page, $init_index, $titre, $url_index, $contenu, $current_user_id);
 			$out = array_merge($out, $data);

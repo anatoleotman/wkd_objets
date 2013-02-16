@@ -12,7 +12,11 @@ $(document).ready(function() {
 	var plugin_navigation_wikid = $('#page_cadre').data('wikid_objets_navigation'); 
 	// si besoin d'appeler des methodes de cet objet depuis le $(document).ready(function()
 	//plugin_navigation_wikid.display_url_base_hash();
-	
+	$('#menu').find('.submenu_item > a')
+		.approach({
+			"fontSize": "12px"
+			, "color": "#CC3300"
+			}, 200);
 	// LOGIN
 	if (WIKIDGLOBALS.LOGIN_FLAG) {
 		// ouvre un jstree pour modifier le menu
@@ -40,51 +44,72 @@ $(document).ready(function() {
 		$('#page_cadre').jstree_sommaires_collections_objets();
 	}
 	
-	var win = $(window);
+//	var win = $(window);
 
-	win.resize(function() {
+//	win.resize(function() {
 
-	var win_w = win.width(),
-	win_h = win.height(),
-	$bg    = $("#bg");
+//	var win_w = win.width(),
+//	win_h = win.height(),
+//	$bg    = $("#bg");
+//	$bg2    = $("#bg2");
+//	// Load narrowest background image based on 
+//	// viewport width, but never load anything narrower 
+//	// that what's already loaded if anything.
+//	var available = [
+//	1024, 1280, 1366,
+//	1400, 1680, 1920,
+//	2560, 3840, 4860
+//	];
 
-	// Load narrowest background image based on 
-	// viewport width, but never load anything narrower 
-	// that what's already loaded if anything.
-	var available = [
-	1024, 1280, 1366,
-	1400, 1680, 1920,
-	2560, 3840, 4860
-	];
+//	var current = $bg.attr('src').match(/([0-9]+)/) ? RegExp.$1 : null;
 
-	var current = $bg.attr('src').match(/([0-9]+)/) ? RegExp.$1 : null;
+//	if (!current || ((current < win_w) && (current < available[available.length - 1]))) {
 
-	if (!current || ((current < win_w) && (current < available[available.length - 1]))) {
+//	var chosen = available[available.length - 1];
 
-	var chosen = available[available.length - 1];
+//	for (var i=0; i<available.length; i++) {
+//	if (available[i] >= win_w) {
+//	  chosen = available[i];
+//	  break;
+//	}
+//	}
 
-	for (var i=0; i<available.length; i++) {
-	if (available[i] >= win_w) {
-	  chosen = available[i];
-	  break;
-	}
-	}
+//	// Set the new image
+//	$bg.attr('src', WIKIDGLOBALS.BASE_DIRECTORY + 'upload/img/background/' + chosen + 'highway.jpg');
+//	$bg2.attr('src', WIKIDGLOBALS.BASE_DIRECTORY + 'upload/img/background/' + chosen + 'highway_photocop.jpg');
+//	// for testing...
+//	// console.log('Chosen background: ' + chosen);
 
-	// Set the new image
-	$bg.attr('src', WIKIDGLOBALS.BASE_DIRECTORY + 'upload/img/background/' + chosen + 'panam.jpg');
+//	}
 
-	// for testing...
-	// console.log('Chosen background: ' + chosen);
+//	// Determine whether width or height should be 100%
+//	if ((win_w / win_h) < ($bg.width() / $bg.height())) {
+//	$bg.css({height: '100%', width: 'auto'});
+//	$bg2.css({height: '100%', width: 'auto'});
+//	} else {
+//	$bg.css({width: '100%', height: 'auto'});
+//	$bg2.css({width: '100%', height: 'auto'});
+//	}
+//	
+//	$bg2.fadeTo(2500, 0);
 
-	}
-
-	// Determine whether width or height should be 100%
-	if ((win_w / win_h) < ($bg.width() / $bg.height())) {
-	$bg.css({height: '100%', width: 'auto'});
-	} else {
-	$bg.css({width: '100%', height: 'auto'});
-	}
-
-	}).resize();
+//	}).resize();
+//	
+////	var targets = $(".title, .social");
+//	var targets = $('#bg2');
+//	if($(window).scrollTop() > 10){
+//		//targets.hide();
+//	}
+//	$(window).scroll(function(){
+//		var pos = $(window).scrollTop();
+//		var seuil = $(window).height()*0.9;
+//		var opacity = ($(window).scrollTop() - seuil) / $(window).height() *2.5;
+//		
+//	if (pos > seuil) {
+//	    targets.stop(true, true).fadeTo("slow", opacity);
+//	} else {
+//	    targets.stop(true, true).fadeTo("fast", 1 / opacity);
+//	}
+//	});
 });
 

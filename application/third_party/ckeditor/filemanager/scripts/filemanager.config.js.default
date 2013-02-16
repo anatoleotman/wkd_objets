@@ -3,7 +3,7 @@
 ---------------------------------------------------------*/
 
 // Set culture to display localized messages
-var culture = 'en';
+var culture = 'fr';
 
 // Set default view mode : 'grid' or 'list'
 var defaultViewMode = 'grid';

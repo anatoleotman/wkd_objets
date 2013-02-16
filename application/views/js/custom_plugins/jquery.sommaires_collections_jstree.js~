@@ -73,13 +73,14 @@
 		
 		bouton_objet_edit_transfer_effect_init: function () {
 			var that = this;
-			
+		
 			this.$elem.one('mouseover.transfer_effect', '#bouton_edit_objet', function (e) {
-				$(this).off('.transfer_effect');
+				
 				var color_string = $('#bouton_edit_objet').css('background');
 				$(e.target).effect('transfer', {to: that.$elem.find('.objet_titre'), className: "ui_transfer_effect_tooltip"}, 600, function () {
 					
 					$(e.target).effect('transfer', {to: that.$elem.find('.objet_contenu'), className: "ui_transfer_effect_tooltip"}, 800, function () {
+						$(this).stop('true');
 						$.proxy(that.bouton_objet_edit_transfer_effect_init(), that);
 					});
 					$('.ui-effects-transfer').css('background', color_string);
@@ -350,15 +351,24 @@
 			var that = this;
 			var $current_page_name = $('input[name="page_name"]', this.$elem).val();
 			var $new_obj_elem = $('<div>', {
-				id: 'new_object',
-				style: 'display:none'
+				id: 'new_object'
+				//style: 'display:none'
 			})
 				.load(WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/display_new_object_template/" + $current_page_name, function () {
-					$(this).show('slide', {}, "easeOutQuint", function () {
-				that._ajax_form_new_object(this);
-			});
+//					$(this).show(function () {
+//						//that._ajax_form_new_object(this);
+//						
+//					});
 				})
 				.appendTo(this.$elem);
+				$('#new_object').position({
+							my: "left top",
+							at: "right top",
+							of: $('#bouton_new_object').button('widget'),
+							using: function (css, calc) {
+								$('#new_object').animate(css, 200, "linear");
+							}
+				});
 		},
 
 		_ajax_form_new_object: function (elem) {
@@ -412,7 +422,7 @@
 
 		handler_edit_object: function () {
 			var that = this;
-			//this.$elem.off('mouseover.transfer_effect');
+			this.$elem.off('mouseover.transfer_effect');
 			this.$current_page_name = this.$elem.find('input[name="page_name"]').val();
 			this.$objet_elem = this.$elem.find('#objet_' + this.$current_page_name);
 			this.$titre_elem = this.$objet_elem.find('.objet_titre');
@@ -439,14 +449,42 @@
 				event.stopImmediatePropagation();
 			});
 			
-			this.$button_edit_object_elem.effect("transfer", { to: that.$contenu_elem  }, 1200, function () {
+			this.$button_edit_object_elem.effect("transfer", { to: that.$contenu_elem  }, 1200, function () {				
+				$(this).stop('true');
 				that.$contenu_elem.attr('contenteditable', 'true');
-				CKEDITOR.inline(that.$contenu_elem.attr('id'));
+				CKEDITOR.inline(that.$contenu_elem.attr('id'), {
+					toolbarGroups: [
+						{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+						{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+						{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+						{ name: 'links' },
+						{ name: 'insert' },
+						{ name: 'forms' },
+						{ name: 'tools' },
+						{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+						{ name: 'others' },
+						'/',
+						{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+						{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
+						{ name: 'styles' },
+						{ name: 'colors' },
+						{ name: 'about' }
+					],
+					extraPlugins: 'sourcearea,oembed,tableresize',
+					//config.toolbar = [['oembed']];
+					oembed_WrapperClass: 'embededContent',
+					oembed_maxWidth: '100',
+					oembed_maxHeight: '',
+					filebrowserBrowseUrl: WIKIDGLOBALS.BASE_DIRECTORY + 'application/third_party/ckeditor/filemanager/index.html'
+
+				}	// NOTE: Remember to leave 'toolbar' property with the default value (null).
+				);
 				var editor = CKEDITOR.instances[that.$contenu_elem.attr('id')];
 				editor.on('instanceReady', function () {
 					// on clique pour valider les modif d'un objet'	
 					that.$button_edit_object_elem.one('click.edit_object', $.proxy(that.handler_user_save_object, that));
-					that.$elem.off('mouseover.transfer_effect');
+					
+//					that.$elem.off('mouseover.transfer_effect');
 				});
 				
 				that.$button_edit_object_elem.button("option", "label", "Enregistrer");

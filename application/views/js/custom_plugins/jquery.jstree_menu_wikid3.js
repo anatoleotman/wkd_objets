@@ -33,11 +33,29 @@
 		bouton_edit_transfer_effect_init: function () {
 			var that = this;
 			this.$bouton_edit_mode.one('mouseover.transfer_effect', function () {
-				$(this).effect('transfer', {to: that.$elem_menu}, 1000, function () {
-	$.proxy(that.bouton_edit_transfer_effect_init(), that);
+				$("#custom_style").html("<style type='text/css'> .transfer_effect_custom { background:" + that.string_couleur_target_rgba + ";} </style>");
+				$(this).effect('transfer', {to: that.$elem_menu, className:'transfer_effect_custom'}, 1000, function () {
+					$(this).stop('true');
+					$.proxy(that.bouton_edit_transfer_effect_init(), that);
 				});
-				$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
+				//$('.ui-effects-transfer').css('background', that.string_couleur_target_rgba);
 			});
+		},
+		
+		_bouton_edit_position_effect_init: function () {
+			var that = this;
+			this.$elem.on('mousemove.bouton_position_effect', this._get_menu_liste(), function (mouseOver_event) {
+				var parentOffset = that.$elem.offset();
+				var relX = mouseOver_event.pageX - parentOffset.left - 10;
+				var relY = mouseOver_event.pageY - parentOffset.top;
+				var $target_elem = $(mouseOver_event.target);
+				that.$bouton_edit_mode
+					.button('widget')
+					.stop()
+					.animate({left: relX.toString()+"px"}, 'slow');
+
+			});
+			return this;
 		},
 		
 		_build_dialog: function () {
@@ -52,7 +70,7 @@
 				.button()
 				.css('background', this.string_couleur_target_rgba);
 				
-			$('#bouton_menu_edit_mode').button('option', 'label', 'Modifier le Menu');
+			//$('#bouton_menu_edit_mode').button('option', 'label', 'Modifier le Menu');
 			
 			
 			this.$menu_tree = $('<div>', {
@@ -536,6 +554,7 @@
 		eventify_menu: function () { // ajouter le hover pour modifier l'apparence du pointeur et indiquer une action possible'
 			//this.$elem.on('dblclick', $.proxy(this.handler_edit_mode, this));
 			this.bouton_edit_transfer_effect_init();
+			this._bouton_edit_position_effect_init();
 			this.$elem.one('click.edit_mode', '#bouton_menu_edit_mode', $.proxy(this.handler_edit_mode, this));
 			return this;
 		},	
@@ -543,7 +562,9 @@
 		handler_edit_mode: function () {
 			var that = this;
 			that.$bouton_edit_mode.off('mouseover.transfer_effect');
+			that.$elem.off('.bouton_position_effect');
 			this.$bouton_edit_mode.effect('transfer', {to: $('#menu')}, 600, function () {
+				$(this).stop('true');
 				if (that.$menu_tree.children().length === 0) {
 					that._init_jstree();
 				}
