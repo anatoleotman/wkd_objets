@@ -561,7 +561,7 @@
 		
 		handler_edit_mode: function () {
 			var that = this;
-			that.$bouton_edit_mode.off('mouseover.transfer_effect');
+			that.$bouton_edit_mode.off('.transfer_effect');
 			that.$elem.off('.bouton_position_effect');
 			this.$bouton_edit_mode.effect('transfer', {to: $('#menu')}, 600, function () {
 				$(this).stop('true');

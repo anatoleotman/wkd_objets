@@ -90,7 +90,7 @@
 				//var parentOffset = $(this).parent().offset(); 
 				//or $(this).offset(); if you really just want the current element's offset
 				var parentOffset = that.$elem.offset();
-				var relX = mouseOver_event.pageX - parentOffset.left - 10;
+				var relX = mouseOver_event.pageX - parentOffset.left - 25;
 				var relY = mouseOver_event.pageY - parentOffset.top;
 				var $target_elem = $(mouseOver_event.target);
 //				var pageCoords = "( " + relX + ", " + relY + " )";
