@@ -108,7 +108,7 @@ class Sync extends CI_Controller {
 			$page['contenu'] .= $objet_view;
 		}
 		
-		$social_data['href_to_like'] = 'http://www.larimogene.com';
+		$social_data['href_to_like'] = 'http://www.facebook.com/pages/La-Rimogene/190216331047198?ref=ts&fref=ts';
 		$social_view = $this->load->view('social_net_view', $social_data, true);
 		
 		$main_view_data = array(

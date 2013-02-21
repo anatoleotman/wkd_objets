@@ -62,9 +62,8 @@
 					//console.info(embed_elem);
 					//console.info(embed_elem.getChildren());
 					console.info(embed_elem.$);
-					
-					
-					
+					editorInstance.insertElement(embed_elem);
+                                        CKEDITOR.dialog.getCurrent().hide();
 					var $iframe_elem = $(embed_elem.$).find('iframe');
 					$iframe_elem.css({
                                    		'width': '100%',
@@ -75,8 +74,7 @@
                                    	if (src.indexOf("youtube.com") >= 0) {
                                    		$iframe_elem.attr('src', src + '&controls=2&showinfo=0&autohide=1');
                                    	}
-					editorInstance.insertElement(embed_elem);
-                                        CKEDITOR.dialog.getCurrent().hide();
+					
                                 } else {
                                     alert(editor.lang.oembed.noEmbedCode);
                                 }

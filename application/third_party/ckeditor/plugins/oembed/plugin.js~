@@ -59,17 +59,20 @@
                                 // tweaks anatole
                                // console.info(e);
 					var embed_elem = CKEDITOR.dom.element.createFromHtml( editor.config.oembed_WrapperClass != null ? '<div class="' + editor.config.oembed_WrapperClass + '">'+ e.code + '</div>' : '<div>' + e.code + '</div>' );
-					console.info(embed_elem);
-					var $iframe_elem = $(embed_elem).find('iframe');
-//					$iframe_elem.css({
-//                                   		'width': '100%',
-//                                   		'height': height
-//                                   	});
-//                                   	
-//                                   	var src = $iframe_elem.attr('src');
-//                                   	if (src.indexOf("youtube.com") >= 0) {
-//                                   		$iframe_elem.attr('src', src + '&controls=2&showinfo=0&autohide=1');
-//                                   	}
+					//console.info(embed_elem);
+					//console.info(embed_elem.getChildren());
+					console.info(embed_elem.$);
+					
+					var $iframe_elem = $(embed_elem.$).find('iframe');
+					$iframe_elem.css({
+                                   		'width': '100%',
+                                   		'height': height
+                                   	});
+                                   	
+                                   	var src = $iframe_elem.attr('src');
+                                   	if (src.indexOf("youtube.com") >= 0) {
+                                   		$iframe_elem.attr('src', src + '&controls=2&showinfo=0&autohide=1');
+                                   	}
 					editorInstance.insertElement(embed_elem);
                                         CKEDITOR.dialog.getCurrent().hide();
                                 } else {

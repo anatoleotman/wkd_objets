@@ -297,6 +297,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0ffcfff4', e
 
 }
 
+#menu_liste li:hover {
+ 	font-weight: bold;
+}
+
 #menu_liste li:hover > ul {
  	display:block; 
 }
@@ -309,7 +313,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0ffcfff4', e
 	border-bottom:none;
     	float:none;
     	padding:10px 15px;
-    	display: block;	
+    	display: block;
 }
 
 #menu_liste li ul li a {
@@ -340,6 +344,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0ffcfff4', e
 
 #menu_liste li ul li:hover {
 	background-color: rgba( 255, 255, 255, 0.50);
+	font-weight: bold;
 }
 
 #menu_liste li ul li.page_courante {

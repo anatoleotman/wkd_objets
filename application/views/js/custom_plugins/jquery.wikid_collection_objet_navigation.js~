@@ -118,7 +118,7 @@
 				},
 				success: function (ans) {
 					if (ans.success === true) {
-						$('#objet_' + ans.page_nom).hide("slide", { direction: 'down'}, "easeOutQuint", function() {
+						$('#objet_' + ans.page_nom).hide("slide", { direction: 'right'}, "easeOutQuint", function() {
 					  	 	$(this).empty();
 					  	 	//console.info($(ans.objet_contenu_html).children());
 					  	 	$(this).html($(ans.objet_contenu_html).children());
@@ -140,7 +140,7 @@
 								$(this).css('background', string_couleur_target_rgba);
 							});
 							//that._images_display_each_element(this); // affiche la page et ses images une par une
-							$(this).show("slide", {}, "easeOutQuint");
+							$(this).show("slide", {direction: 'left'}, "easeOutQuint");
 						});
 					}
 					else {
@@ -260,7 +260,8 @@
 						
 						// c'est la clé pour le plugin mode edit
 							$(this).data('page_nom', ans.page_nom); 
-							$(this).next('input[name="page_name"]').val(ans.page_nom); 
+							$(this).next('input[name="page_name"]').val(ans.page_nom);
+							that._iframe_display(this);
 							//that._images_display_each_element(this); // affiche la page et ses images une par une
 						// on prépare la nouvelle page avant de l'afficher'
 							$(this).find('.buttonset').buttonset().children('button').each(function () {
@@ -294,6 +295,18 @@
 					
 				}		
 			});
+		},
+		
+		_iframe_display: function (elem) {
+			var $iframes = $('iframe', elem);
+			if ($iframes.length) {
+				$iframes.hide();
+				$iframes.each(function () {
+					$(this).on('load', function () {
+						$(this).fadeIn('slow');
+					})
+				});
+			}
 		},
 		
 		_images_display_each_element: function (elem) { // afficher images une par une

@@ -14,7 +14,7 @@
 			this._code_couleur_init()._init_buttons();
 			//this._init_buttons();
 			this.events_sommaire_edit();
-//			this.bouton_objet_edit_transfer_effect_init();
+			this.bouton_sommaire_edit_transfer_effect_init();
 			this.events_object_edit();
 			//return this to chain/use the bridge with less code
 			return this;
@@ -45,7 +45,6 @@
 		
 		events_sommaire_edit: function () { // ajouter le hover pour modifier l'apparence du pointeur et indiquer une action possible'
 			this.$elem.one('click.sommaire_jstree_mode', '#bouton_sommaire_collection', $.proxy(this.handler_sommaire_edit_mode, this));
-			this.bouton_sommaire_edit_transfer_effect_init();
 			this._bouton_edit_sommaire_position_effect_init();		
 			return this;
 		},
@@ -131,7 +130,6 @@
 		
 		handler_sommaire_edit_mode: function (e) {
 			var that = this;
-			
 			$('#wrapper').on('click.sommaire_jstree_mode', 'a', function (event) {
 					event.preventDefault();
 					event.stopPropagation();
@@ -139,8 +137,9 @@
 			
 			this.$current_page_name = this.$elem.find('input[name="page_name"]').val();
 			this.$sommaire_elem = this.$elem.find('#sommaire_collection_' + this.$current_page_name);
-			this.$elem.find('#bouton_sommaire_collection').stop('true').effect("transfer", { to: this.$sommaire_elem.find('ul'), className: "transfer_effect_custom"  }, 1000, function () {
-				
+			this.$elem.find('#bouton_sommaire_collection').effect("transfer", { to: this.$sommaire_elem.find('ul'), className: "transfer_effect_custom"  }, 1000, function () {
+				$(this).stop('true');
+				that.$elem.off('.sommaire_transfer_effect');
 				$.proxy(that._init_sommaire_jstree(), that);
 				
 			});
@@ -300,9 +299,7 @@
 			$('.sommaire_collection_bouton').css('display', 'none');
 
 			// attacher les événements
-			this.$elem.on('click.sommaire_jstree_mode', '#bouton_new_object', $.proxy(this.handler_new_object, this));
-
-
+			this.$elem.one('click.sommaire_jstree_mode', '#bouton_new_object', $.proxy(this.handler_new_object, this));
 			this.$elem.on('click.sommaire_jstree_mode', '#add_folder_bouton', $.proxy(this.handler_add_folder, this));
 			this.$elem.one('click.sommaire_jstree_mode', '#view_collection_bouton', $.proxy(this.handler_view_collection, this));
 
@@ -401,22 +398,24 @@
 				//style: 'display:none'
 			})
 				.load(WIKIDGLOBALS.BASE_DIRECTORY + "index.php/collection_objets/display_new_object_template/" + $current_page_name, function () {
-				})
-				.appendTo(this.$elem);
-				$('#new_object').position({
+					$(this).appendTo(that.$elem);
+					$(this).css('width', '50%');
+					$('#new_object').position({
 							my: "top left",
 							at: "bottom right",
-							of: $('#bouton_new_object').button('widget'),
+							of: $('#bouton_new_object'),
 							using: function (css, calc) {
 								$('#new_object').animate(css, 200, "linear");
 							}
+					});
+					that._ajax_form_new_object(this);
 				});
-				that._ajax_form_new_object(this);
-						
 		},
 
 		_ajax_form_new_object: function (elem) {
-			$('#new_object_form').validate({
+			var that = this;
+//			console.info($('#new_object').find('form'));
+			$('#new_object').find('form').validate({
 				submitHandler: function (form) {
 					$(form).ajaxSubmit({
 						target: $(form).find('p'),
@@ -454,6 +453,7 @@
 						},
 						complete: function () {
 							$(this).spin(false);
+							that.$elem.one('click.sommaire_jstree_mode', '#bouton_new_object', $.proxy(this.handler_new_object, this));
 							// this.options.on_update_callback.call()
 						}
 					});
