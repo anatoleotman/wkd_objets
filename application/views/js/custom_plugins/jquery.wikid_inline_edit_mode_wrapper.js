@@ -192,31 +192,7 @@
 				// create Ckeditor instance 
 				that._get_elem_contenu_ckeditable().attr('contenteditable', 'true');
 				CKEDITOR.inline(that._get_elem_contenu_ckeditable().attr('id'), {
-					toolbarGroups: [
-						{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-						{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-						{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-						{ name: 'links' },
-						{ name: 'insert' },
-						{ name: 'forms' },
-						{ name: 'tools' },
-						{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
-						{ name: 'others' },
-						'/',
-						{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-						{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
-						{ name: 'styles' },
-						{ name: 'colors' },
-						{ name: 'about' }
-					],
-					extraPlugins: 'sourcearea,oembed,tableresize',
-					//config.toolbar = [['oembed']];
-					oembed_WrapperClass: 'embededContent',
-					oembed_maxWidth: '100',
-					oembed_maxHeight: '',
-					filebrowserBrowseUrl: WIKIDGLOBALS.BASE_DIRECTORY + 'application/third_party/ckeditor/filemanager/index.html'
-
-					// NOTE: Remember to leave 'toolbar' property with the default value (null).
+					customConfig: WIKIDGLOBALS.BASE_DIRECTORY + 'application/views/js/custom_plugins/wikid_ckeditor_custom_config.js'	
 				});
 				var editor = CKEDITOR.instances[that._get_elem_contenu_ckeditable().attr('id')];
 				editor.on('instanceReady', $.proxy(that._events_valid_page, that));

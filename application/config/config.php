@@ -22,7 +22,7 @@ $config['admin_email'] = 'jonny.oneagain@gmail.com';
 |
 */
 //$config['base_url']     = 'http://'.$_SERVER['HTTP_HOST'].'/larimogene/';
-$config['base_url']  = 'http://'.$_SERVER['HTTP_HOST'].'/wkd_objets/';
+$config['base_url']  = 'http://'.$_SERVER['HTTP_HOST'].'/wikid_objets2/';
 /*
 |--------------------------------------------------------------------------
 | Index File

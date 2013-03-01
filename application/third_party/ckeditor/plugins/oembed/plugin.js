@@ -72,7 +72,7 @@
                                    	
                                    	var src = $iframe_elem.attr('src');
                                    	if (src.indexOf("youtube.com") >= 0) {
-                                   		$iframe_elem.attr('src', src + '&controls=2&showinfo=0&autohide=1');
+                                   		$iframe_elem.attr('src', src + '&controls=2&showinfo=2&autohide=1');
                                    	}
 					
                                 } else {
