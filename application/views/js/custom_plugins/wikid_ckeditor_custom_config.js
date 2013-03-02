@@ -29,7 +29,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.oembed_WrapperClass = 'embededContent';
 	config.oembed_maxWidth = '100';
 	config.oembed_maxHeight = '';
-	filebrowserBrowseUrl = WIKIDGLOBALS.BASE_DIRECTORY + 'application/third_party/ckeditor/filemanager/index.html';
+	config.filebrowserBrowseUrl = WIKIDGLOBALS.BASE_DIRECTORY + 'application/third_party/ckeditor/filemanager/index.html';
 
 					// NOTE: Remember to leave 'toolbar' property with the default value (null).
 };
