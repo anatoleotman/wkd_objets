@@ -189,6 +189,9 @@
 			$(document).on('click', 'a[href*="/sync/show/"]', function (event) {
 	    			event.preventDefault(); // Ajax here
 	    			var href = $(event.target).attr('href');
+	    			if (typeof href === 'undefined') {
+	    				href = $(event.target).parent('a').attr('href');
+	    			}
 	    			var marqueur = '/sync/show/';
 	    			var internal_link = href.substring(href.lastIndexOf(marqueur) + marqueur.length, href.length);
 	    			var hashes = internal_link.split('/');

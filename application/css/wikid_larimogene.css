@@ -54,7 +54,7 @@ body{
 #body_principal{
 	overflow-x: hidden;
 	height:100%;
-	font-family:toony_loons, sans-serif;
+	font-family:Arial;
 	font-size:1.35rem;
     	line-height:1.5;
     	background-color: white;
@@ -85,7 +85,7 @@ body{
 	text-align: right;
 }
 
-#wrapper {
+.layout_vertical {
 	position:relative;
 	width: 1200px;
 /*	height: 1500px;*/
@@ -222,7 +222,20 @@ a {
 	color: inherit;
 }
 p{
-	font-size: 13px;
+	font-size: 28px;
+	letter-spacing:2px;
+}
+
+.debut_chapitre:first-line {
+font-variant: small-caps;
+font-size: 110%;
+}
+.debut_chapitre:first-letter
+{
+font-size:200%;
+float: left;
+font-weight: bold;
+margin: 5px 5px 5px 0; 
 }
 
 #menu_cadre{
@@ -278,7 +291,7 @@ font-size: 12px;
     display:none;
     list-style:none;
     box-shadow:0 0 20px rgba(0, 0, 0, 0.2);
-    font-family:Arial,sans-serif;
+    font-family:Arial;
     padding:8px 0;
     padding-top:35px;
     position:absolute;
@@ -315,7 +328,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0ffcfff4', e
 
 #menu_liste li ul li a {
 	display:block; 
-	font-family:"Maven Pro",sans-serif;
 }
 
 .stretch {
@@ -328,7 +340,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0ffcfff4', e
 }
 
 #jstree_form {
-	font-family:"Maven Pro",sans-serif;
 	font-size:1.35rem;
     	line-height:1.5;
     	float:left;
@@ -414,7 +425,6 @@ ul#menu_liste li a:hover{
 
 #menu_tree {
 	background-color:transparent;
-	font-family:Tahoma, Verdana, Arial, sans-serif;
 	line-heigt:2.0;
 	float:left;
 }
@@ -456,7 +466,6 @@ ul#menu_liste li a:hover{
 	border-bottom:medium none;
 	border:1px solid #EBEBEB;
 	border-radius:1px 1px 1px 1px;
-	font-family:"Maven Pro",sans-serif;
 	padding:5px 10px;
 	font-size:1.0rem;
 	line-height:1.0;
@@ -481,13 +490,11 @@ ul#menu_liste li a:hover{
     	text-align:left;
 	border:1px solid #EBEBEB;
 	border-radius:5px 5px 5px 5px;
-	font-family:"Maven Pro",sans-serif;
 }
 #sommaire_collection_ul.accordion > li > a.open {
 	text-align:right;
 	font-weight:bold;
 	color: black;
-	font-family:"Maven Pro",sans-serif;
 	background: #F7F7F7;
 }
 
@@ -500,13 +507,11 @@ ul#menu_liste li a:hover{
 	text-align:right;
 	border:1px solid #EBEBEB;
 	border-radius:5px 5px 5px 5px;
-	font-family:"Maven Pro",sans-serif;
 }
 #sommaire_collection_ul.accordion > li > ul > li > a.open {
 	background: #F7F7F7;
 	font-weight:bold;
 	color: black;
-	font-family:"Maven Pro",sans-serif;
 }
 
 .jstree ul {

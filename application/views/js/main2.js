@@ -17,6 +17,10 @@ $(document).ready(function() {
 			"fontSize": "12px"
 			, "color": "#CC3300"
 			}, 200);
+	
+	$('#page p').typeButter({
+		'default-spacing' : '0em'
+	});
 	// LOGIN
 	if (WIKIDGLOBALS.LOGIN_FLAG) {
 		// ouvre un jstree pour modifier le menu

@@ -25,7 +25,7 @@ CKEDITOR.editorConfig = function( config ) {
 						{ name: 'colors' },
 						{ name: 'about' }
 	];
-	config.extraPlugins = 'sourcearea,oembed,tableresize,showblocks,showborders,newpage';
+	config.extraPlugins = 'sourcearea,oembed,tableresize,showblocks,showborders,newpage,justify,richcombo,font';
 	config.oembed_WrapperClass = 'embededContent';
 	config.oembed_maxWidth = '100';
 	config.oembed_maxHeight = '';
@@ -33,3 +33,9 @@ CKEDITOR.editorConfig = function( config ) {
 
 					// NOTE: Remember to leave 'toolbar' property with the default value (null).
 };
+
+CKEDITOR.stylesSet.add( 'default',
+[
+    // Inline styles
+    { name : 'Début de chapitre', element : 'p', attributes : { 'class' : 'debut_chapitre' } },
+]);

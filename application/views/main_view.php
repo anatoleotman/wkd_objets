@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>LA RIMOGENE</title>
+<title>wkd_objets</title>
 <meta content="text/html; charset=utf-8" http-equiv="content-type" />
 
 <style type="text/css"> .js { visibility:hidden; } </style> 
@@ -19,46 +19,51 @@ if ($logged) { ?>
 <link rel="stylesheet" type="text/css" href="<?=parse_url($base_url, PHP_URL_PATH);?>application/css/jquery.fileupload-ui.css"/>
 
 <?php } ?>
-
+<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/typebutter.jquery.min.js"></script>
+<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/typebutter.arial.js"></script>
 
 </head>
-<body id="body_principal" class='filter'>
+<body id="body_principal" class="filter nojs">
 <div style="display: none" id="custom_style">
 </div>
-	<div id="wrapper" class="nojs">	
 	<script type="text/javascript">
 	// pour empêcher le flickering si on change de page dès l'entrée du site:
 	// par exemple si on copie colle une url avec un hash du genre wikid_simple/#une_autre_page_que_la_page_d_accueil
 		(function (B,C) {
 			B[C] = B[C].replace(/\bnojs\b/,'js');
-		}(document.getElementById('wrapper'),'className'));
+		}(document.getElementById('body_principal'),'className'));
 	</script>
-		
-		<div id="social_wrapper">  
-			<?=$social_nets;?>
-		</div>
-		
-		<div id="header_cadre" class="wrapper_wikidable clearfix">  
-			<div id="header" class="contenu_wikid"><?=$entete['contenu'];?></div>
-			<input type="hidden" name="page_name" value="<?=$entete['nom'];?>"/>
-		</div>
-		
-		<div id="footer_cadre" class="wrapper_wikidable clearfix">
-			 <div id="footer" class="contenu_wikid"><?=$pied_page['contenu'];?></div>
-			 <input type="hidden" name="page_name" value="<?=$pied_page['nom'];?>"/>
-		</div>	
-		<div id="menu_cadre" class="filter">
-			<div id="menu" class="menu"><?=$menu;?>
+	<div id="partie_haute">
+		<div id="partie_haute_wrapper" class="layout_vertical">
+			<div id="social_wrapper">  
+				<?=$social_nets;?>
+			</div>
+	
+			<div id="header_cadre" class="wrapper_wikidable">  
+				<div id="header" class="contenu_wikid"><?=$entete['contenu'];?></div>
+				<input type="hidden" name="page_name" value="<?=$entete['nom'];?>"/>
+			</div>
+	
+			<div id="footer_cadre" class="wrapper_wikidable">
+				 <div id="footer" class="contenu_wikid"><?=$pied_page['contenu'];?></div>
+				 <input type="hidden" name="page_name" value="<?=$pied_page['nom'];?>"/>
+			</div>	
+			<div id="menu_cadre" class="filter">
+				<div id="menu" class="menu"><?=$menu;?>
+				</div>
 			</div>
 		</div>
-		<div id="page_cadre" class="wrapper_wikidable">
-			 <div id="page" class="contenu_wikid clearfix"><?=$page['contenu'];?></div>
-			 <input type="hidden" name="page_name" value="<?=$page['nom'];?>"/>
-		</div>
-		
-		
-			
 	</div>
+	<div id="partie_milieu">
+		<div id="partie_milieu_wrapper" class="layout_vertical">
+			<div id="page_cadre" class="wrapper_wikidable">
+				 <div id="page" class="contenu_wikid clearfix"><?=$page['contenu'];?></div>
+				 <input type="hidden" name="page_name" value="<?=$page['nom'];?>"/>
+			</div>
+		</div>
+	</div>	
+			
 </body>
 
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/core/crockford_object_create_function.js"></script>
@@ -72,7 +77,7 @@ if ($logged) { ?>
 	var WIKIDGLOBALS = Object.create(MY_GLOBALS); //Test
 </script>
 
-<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-1.7.2.min.js"></script>
+
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-ui-1.8.21.custom.min.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.color.js"></script>
 <!--<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.easing.1.3.js"></script>-->
@@ -125,7 +130,7 @@ if ($logged) { ?>
 	// par exemple si on copie colle une url avec un hash du genre wikid_simple/#une_autre_page_que_la_page_d_accueil
 		(function (B,C) {
 			B[C] = B[C].replace(/\bjs\b/,'');
-		}(document.getElementById('wrapper'),'className'));
+		}(document.getElementById('body_principal'),'className'));
 	</script>
 
 

@@ -68,7 +68,10 @@
 			})	
 				.appendTo(this.$elem)
 				.button()
-				.css('background', this.string_couleur_target_rgba);
+				.css({
+					'background': this.string_couleur_target_rgba,
+					'position': 'absolute'
+				});
 				
 			//$('#bouton_menu_edit_mode').button('option', 'label', 'Modifier le Menu');
 			

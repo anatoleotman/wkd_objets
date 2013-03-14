@@ -33,10 +33,13 @@
 	    			'</div>',
 				].join('');
 			this.$elem_login_wrapper = $('<div>', {
-				id: 'login_wrapper'
+				id: 'login_wrapper',
+				style: 'font-size:21px'
 			});
+			
+ 
 			this.$elem_login_wrapper.html(html_string);
-			$('#wrapper').append(this.$elem_login_wrapper); //on peut aussi attacher au body
+			$('body').append(this.$elem_login_wrapper); //on peut aussi attacher au body
 			return this;
 		},
 		_init_references: function () {
@@ -101,7 +104,6 @@
 		},
 		
 		_init_dialog: function () {
-	
 			var that = this;
 			this.$elem_form_dialog.dialog({
 				autoOpen: false,

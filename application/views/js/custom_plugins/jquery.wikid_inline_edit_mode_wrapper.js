@@ -51,7 +51,8 @@
 			}).appendTo(this.$elem).button().css({
 				'background': 'none',
 				'background-color': this.string_couleur_target_rgba,
-				'z-index': 2
+				'z-index': 2,
+				'position': 'absolute'
 			});
 			return this;
 		},
