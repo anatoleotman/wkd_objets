@@ -70,7 +70,8 @@
 				.button()
 				.css({
 					'background': this.string_couleur_target_rgba,
-					'position': 'absolute'
+					'position': 'absolute',
+					'z-index': 4
 				});
 				
 			//$('#bouton_menu_edit_mode').button('option', 'label', 'Modifier le Menu');

@@ -18,8 +18,8 @@ $(document).ready(function() {
 			, "color": "#CC3300"
 			}, 200);
 	
-	$('#page p').typeButter({
-		'default-spacing' : '0em'
+	$('#page_cadre').localScroll({
+		lazy:true
 	});
 	// LOGIN
 	if (WIKIDGLOBALS.LOGIN_FLAG) {

@@ -20,8 +20,7 @@ if ($logged) { ?>
 
 <?php } ?>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/typebutter.jquery.min.js"></script>
-<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/typebutter.arial.js"></script>
+
 
 </head>
 <body id="body_principal" class="filter nojs">
@@ -87,9 +86,12 @@ if ($logged) { ?>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.spin.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.nestedAccordion.js"></script>
+<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.scrollTo-1.4.3.1-min.js"></script>
+<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.localscroll-1.2.7-min.js"></script>
 
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.wikid_collection_objet_navigation.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.wikid_login_form_dialog.js"></script>
+
 
 <?php 
 if ($logged) { ?>
