@@ -126,6 +126,8 @@ class Collection_objets extends CI_Controller {
 		$current_user_id = $session_user_data['user_id'];
 		$this->form_validation->set_rules('titre', 'Titre', 'trim|strip_tags|callback_is_only_whitespaces|required|xss_clean');
 		$this->form_validation->set_rules('contenu', 'Contenu', 'trim|required');
+		
+		// form validation ?
 		if($this->form_validation->run() == FALSE) {
 			$out['validation_message'] = validation_errors();
 			$out['validation_success'] = false;
@@ -134,6 +136,7 @@ class Collection_objets extends CI_Controller {
 			$out['validation_success'] = true;
 			$contenu = $this->input->post('contenu');
 			$init_index = $this->input->post('initial_index', true);
+			$ancien_url_index = $this->input->post('ancien_url_index', true);
 			$titre = $this->input->post('titre', true);
 			$sommaire_page = $this->input->post('sommaire_page', true);
 			//user_save_object ($collection_nom, $initial_index, $titre, $url_index, $contenu, $user_id)
@@ -146,7 +149,7 @@ class Collection_objets extends CI_Controller {
 			$data = $this->Collection_objets_model->user_save_object($sommaire_page, $init_index, $titre, $url_index, $contenu, $current_user_id);
 			$out = array_merge($out, $data);
 		}
-		 
+		$this->build_pdf($ancien_url_index, $url_index, $contenu);
 		echo json_encode($out);
 
 		//$saved_sommaire_ul = $this->Collection_objets_model->user_save_collection_sommaire_ul($collection_nom, $sommaire_collection_ul, $current_user_id);
@@ -161,6 +164,56 @@ class Collection_objets extends CI_Controller {
 		else {
 			return true;
 		}
+	}
+	
+	private function build_pdf ($ancien_url_index, $nouveau_url_index, $str_content) {
+		$this->load->library('Pdf');
+		if (file_exists($ancien_url_index.'.pdf')) unlink($ancien_url_index.'.pdf');
+		$pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Nicola Asuni');
+$pdf->SetTitle('TCPDF Example 061');
+$pdf->SetSubject('TCPDF Tutorial');
+$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+// set default header data
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 061', PDF_HEADER_STRING);
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+
+// ---------------------------------------------------------
+
+// set font
+#$pdf->SetFont('helvetica', '', 10);
+
+// add a page
+$pdf->AddPage();
+
+// output the HTML content
+
+$css_string = file_get_contents('application/css/wikid_larimogene.css');
+$html = '<style>'.$css_string.'</style>'.$str_content;
+$pdf->writeHTML($html, true, false, true, false, '');
+		$pdf->Output($nouveau_url_index.'.pdf', 'F');
 	}
 	
 	public function get_objects_from_every_collection () {

@@ -524,6 +524,7 @@
 					sommaire_page: that.$current_page_name,
 					titre: that.$titre_elem.html(),
 					initial_index: that.$objet_elem.find('input[name="objet_index_initial"]').val(),
+					ancien_url_index: last_url_index,
 					//contenu: $contenu_elem.html()
 					//url_index
 					contenu: CKEDITOR.instances[that.$contenu_elem.attr('id')].getData()
