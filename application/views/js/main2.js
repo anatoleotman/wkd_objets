@@ -18,9 +18,32 @@ $(document).ready(function() {
 			, "color": "#CC3300"
 			}, 200);
 	
+	// local scroll pour les ancres
+	
 	$('#page_cadre').localScroll({
 		lazy:true
 	});
+	
+	// slide show pour les images
+	$('.slideshow').cycle({
+	after: function (currSlideElement, nextSlideElement, options, forwardFlag) {
+		$(nextSlideElement).rotate({
+			angle:0, 
+			animateTo:360, 
+		});
+
+	},
+	fx:    'zoom', 
+	sync:  true, 
+	delay: -3000,
+	speedIn: 900,
+	speedOut: 1200,
+	timeout: 100,
+	continuous: true,
+	//easing: 'easeIn'
+});
+
+	// superposer des images
 	// LOGIN
 	if (WIKIDGLOBALS.LOGIN_FLAG) {
 		// ouvre un jstree pour modifier le menu

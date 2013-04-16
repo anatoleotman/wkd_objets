@@ -126,13 +126,16 @@ class Pages extends CI_Controller {
 		$page_data = $this->Pages_model->get_page($nom_page);
 		$data['page_nom'] = $page_data['nom'];
 		//$data['contenu'] = $page_data['contenu'];
+		
 		$data['tip'] = 'version validée';
 		$page_user_data = $this->Users_model->get_user_data_by_id($page_data['user_id']);
 		$data['page_user_login'] = $page_user_data['login'];
 		$format_date = 'DATE_RSS';
 		$data['human_date'] = standard_date($format_date, $page_data['date']);
 		$data['bool_collection_objets'] = $page_data['bool_collection_objets'];
-		$out = $this->load->view('edit_page_options_view', $data, TRUE);
+		
+		$out['contenu'] = $page_data['contenu'];
+		$out['options'] = $this->load->view('edit_page_options_view', $data, TRUE);
 		echo json_encode($out);
 	}
 	/*

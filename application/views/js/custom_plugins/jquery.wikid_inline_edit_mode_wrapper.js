@@ -150,7 +150,8 @@
 				},
 				success: function (ans) {
 					//this.$elem.append(ans); // on attache le wikid formulaire
-					$(ans).css('display', 'none').appendTo(this.$elem);
+					this._get_elem_contenu_ckeditable().html(ans.contenu);
+					$(ans.options).css('display', 'none').appendTo(this.$elem);
 					this.$wikid_options = $('#edit_mode_options_' + this.$elem_contenu_wikid.data('page_nom'), this.$elem);
 					$('.edit_mode_options_buttonset', this.$wikid_options).buttonset(); // pour l'apparence des boutons'				
 					this.$wikid_options.show('scale');
@@ -172,7 +173,11 @@
 			var that = this;
 			var contenu_wikidable_elem_ID = this.$elem_contenu_wikid.attr('id'); // 'page' 'footer' par ex. 
 			this.$elem.toggleClass('edit_mode_actif');
-
+			this.$elem.find('.slideshow').cycle('stop').cycle('destroy');
+			this.$elem.find('.slideshow').find('img').css({
+				position: 'relative',
+				display: 'inline-block'
+			});
 
 			// on s'assure de désactiver les liens cliquables
 			$('#wrapper').on('click.div_wikidable', 'a', function (event) {

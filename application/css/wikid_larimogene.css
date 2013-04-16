@@ -526,3 +526,7 @@ ul#menu_liste li a:hover{
 	padding:10px 20px!important;
 	
 }
+
+.image_overlay img {
+	position: absolute;
+}
