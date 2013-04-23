@@ -7,7 +7,7 @@
 				this.elem = elem;
 				this.$elem = $(elem);
 				this._build_form()._init_references();
-				this._init_dialog()._add_click_show_login_button();			
+				this._add_click_show_login_button()._init_dialog();			
 				return this;
 		},
 	
@@ -19,7 +19,7 @@
 			var html_string = [
 	    			'<button id="login_button"></button>',
 	    			'<div id="login_form_dialog" class="login_form" title="Login">',
-	    			'<p class="validateTips">All form fields are required.</p>',
+	    			'<p class="validateTips">Login.</p>',
 	    			'<form>',
 	    			'<fieldset>',
 	    			'<input type="text" name="name" id="name" title="Name" placeholder="Name" class="text ui-widget-content ui-corner-all" />',
@@ -102,9 +102,11 @@
 		
 		_init_dialog: function () {
 			var that = this;
+			
 			this.$elem_form_dialog.dialog({
+				title: '<span class="ui-icon ui-icon-locked"></span>',
 				autoOpen: false,
-				height: 369.5,
+				height: 470,
 				width: 508.5,
 				modal: true,
 				buttons: {
@@ -169,9 +171,24 @@
 					});
 				}
 			});
-		return this;
+			
+			// ajouter le logo airlab
+			this.$elem_show_login_button.one('click', function () {
+				var $buttonpane = that.$elem_form_dialog
+					.dialog('widget')
+					.find('.ui-dialog-buttonpane');
+				
+				var $logo_layers_elem = $('<div>').load(WIKIDGLOBALS.BASE_DIRECTORY + "index.php/users/load_logo_wikid_layers", function () {
+					$buttonpane.append($logo_layers_elem);
+					$buttonpane.find('.image_overlay').img_overlay_effect();
+					$buttonpane.css('height', '145px');
+				});
+				$logo_layers_elem.css({
+					'position': 'relative'	
+				});
+			});
+			return this;
 		}
-	
 	};
 
 	$.fn.wikid_login_form_dialog = function (options) {

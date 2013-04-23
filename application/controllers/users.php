@@ -43,5 +43,9 @@ class Users extends CI_Controller {
 		$this->session->sess_destroy();
 		redirect('');
 	}
+	
+	public function load_logo_wikid_layers () {
+		echo $this->load->view('logo_wikid_layers_view', true);
+	}
 }
 	

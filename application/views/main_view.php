@@ -6,10 +6,10 @@
 
 <style type="text/css"> .js { visibility:hidden; } </style> 
 
-<link rel="shortcut icon" href="favicon.ico" />
+<link rel="shortcut icon" href="disk-usage_ico.ico" />
 
 
-<link rel="stylesheet" type="text/css" href="<?=parse_url($base_url, PHP_URL_PATH);?>application/css/wikid_larimogene.css"/>
+<link rel="stylesheet" type="text/css" href="<?=parse_url($base_url, PHP_URL_PATH);?>application/css/wikid.css"/>
 <link rel="stylesheet" type="text/css" href="<?=parse_url($base_url, PHP_URL_PATH);?>application/css/jquery.ui.all.css"/>
 
 <?php 
@@ -44,9 +44,9 @@ if ($logged) { ?>
 				<input type="hidden" name="page_name" value="<?=$entete['nom'];?>"/>
 			</div>
 	
-			<div id="footer_cadre" class="wrapper_wikidable">
-				 <div id="footer" class="contenu_wikid"><?=$pied_page['contenu'];?></div>
-				 <input type="hidden" name="page_name" value="<?=$pied_page['nom'];?>"/>
+			<div id="sidemenu_cadre" class="wrapper_wikidable">
+				 <div id="sidemenu" class="contenu_wikid"><?=$sidemenu['contenu'];?></div>
+				 <input type="hidden" name="page_name" value="<?=$sidemenu['nom'];?>"/>
 			</div>	
 			<div id="menu_cadre" class="filter">
 				<div id="menu" class="menu"><?=$menu;?>
@@ -61,8 +61,15 @@ if ($logged) { ?>
 				 <input type="hidden" name="page_name" value="<?=$page['nom'];?>"/>
 			</div>
 		</div>
-	</div>	
-			
+	</div>
+	<div id="partie_basse">
+		<div id="partie_basse_wrapper" class="layout_vertical">
+			<div id="footer_cadre" class="wrapper_wikidable">
+				 <div id="footer" class="contenu_wikid"><?=$pied_page['contenu'];?></div>
+				 <input type="hidden" name="page_name" value="<?=$pied_page['nom'];?>"/>
+			</div>	
+		</div>
+	</div>		
 </body>
 
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/core/crockford_object_create_function.js"></script>
@@ -77,7 +84,7 @@ if ($logged) { ?>
 </script>
 
 
-<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-ui-1.10.2.custom.min.js"></script>
+<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-ui-1.8.21.custom.min.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.color.js"></script>
 <!--<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.easing.1.3.js"></script>-->
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.approach.js"></script>

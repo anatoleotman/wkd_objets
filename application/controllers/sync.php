@@ -58,6 +58,7 @@ class Sync extends CI_Controller {
 		$page['contenu'] = $this->load->view('contenu_ckeditable_view', $data_contenu_ckeditable_view, true);
 		$entete = $this->Pages_model->get_page('header');
 		$pied_page = $this->Pages_model->get_page('footer');
+		$sidemenu = $this->Pages_model->get_page('sidemenu');
 		
 		$list_menu = $this->Menu_model->get_list_menu();
 		
@@ -114,7 +115,8 @@ class Sync extends CI_Controller {
 		$main_view_data = array(
 				'social_nets' => $social_view,
 				'page' => $page, 
-				'entete' => $entete, 
+				'entete' => $entete,
+				'sidemenu' => $sidemenu, 
 				'pied_page' => $pied_page,
 				'menu' => $menu,
 				'base_url' => base_url(),

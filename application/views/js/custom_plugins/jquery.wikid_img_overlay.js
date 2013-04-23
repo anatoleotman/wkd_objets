@@ -7,6 +7,7 @@
 				this.elem = elem;
 				this.$elem = $(elem);
 				
+				this.$elem.addClass('wikid_overlay_effect');
 				this._overlay_elem();
 				return this;
 		},

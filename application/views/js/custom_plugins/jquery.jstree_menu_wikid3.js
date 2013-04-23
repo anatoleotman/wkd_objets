@@ -102,6 +102,7 @@
 						});
 					},
 					close: function () {
+						console.info($(this).dialog('widget'));
 						that.eventify_menu();
 						$(this).dialog('widget').hide('scale');
 					},
