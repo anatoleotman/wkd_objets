@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html class="">
 <head>
 <title>wkd_objets</title>
 <meta content="text/html; charset=utf-8" http-equiv="content-type" />
 
 <style type="text/css"> .js { visibility:hidden; } </style> 
 
-
+<link rel="shortcut icon" href="favicon.ico" />
 
 
 <link rel="stylesheet" type="text/css" href="<?=parse_url($base_url, PHP_URL_PATH);?>application/css/wikid_larimogene.css"/>
@@ -57,7 +57,7 @@ if ($logged) { ?>
 	<div id="partie_milieu">
 		<div id="partie_milieu_wrapper" class="layout_vertical">
 			<div id="page_cadre" class="wrapper_wikidable">
-				 <div id="page" class="contenu_wikid clearfix"><?=$page['contenu'];?></div>
+				 <div id="page" class="contenu_wikid"><?=$page['contenu'];?></div>
 				 <input type="hidden" name="page_name" value="<?=$page['nom'];?>"/>
 			</div>
 		</div>
@@ -77,7 +77,7 @@ if ($logged) { ?>
 </script>
 
 
-<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery-ui-1.10.2.custom.min.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.color.js"></script>
 <!--<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.easing.1.3.js"></script>-->
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.approach.js"></script>
@@ -90,6 +90,7 @@ if ($logged) { ?>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.localscroll-1.2.7-min.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jquery.cycle.all.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/jQueryRotateCompressed.2.2.js"></script>
+<script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.wikid_img_overlay.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.wikid_collection_objet_navigation.js"></script>
 <script type="text/javascript" src="<?=parse_url($base_url, PHP_URL_PATH);?>application/views/js/custom_plugins/jquery.wikid_login_form_dialog.js"></script>
 

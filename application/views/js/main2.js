@@ -43,7 +43,8 @@ $(document).ready(function() {
 	//easing: 'easeIn'
 });
 
-	// superposer des images
+	$('.image_overlay').img_overlay_effect();
+				
 	// LOGIN
 	if (WIKIDGLOBALS.LOGIN_FLAG) {
 		// ouvre un jstree pour modifier le menu
@@ -64,6 +65,69 @@ $(document).ready(function() {
 				// arguments fournis depuis l'intérieur de l'objet grâce à function.apply()'
 				plugin_navigation_wikid.display_ajax(page_nom);
 				console.info(page_nom);
+			}
+		});
+		
+		// bouton ACTIVATE WIKID
+		var $label = $('<label>', {
+			'for': "edit_mode_checkbox",
+			html: "WIKID"
+		});
+		var $toggle_checkbox = $('<input>', {
+			type: "checkbox",
+			id: "edit_mode_checkbox",
+			title: "Cliquez pour activer le mode WIKID"
+		});
+		
+		var $user_wrapper = $('<div>', {
+			id: "user_wrapper"
+		})
+			.append($toggle_checkbox)
+			.append($label);
+		
+		$user_wrapper.prependTo($('body'));
+		$toggle_checkbox.button({
+			label: 'Wikid',
+			icons: {
+				primary: "ui-icon-power"
+			}
+		});
+		$toggle_checkbox
+			.button('widget')
+			.css({
+				'font-size':'14px',
+				'margin': '2px',
+				'background': 'none'
+			});
+		//$('#edit_mode_checkbox').tooltip();
+		
+		var array_colors = [];
+		var colors_index = 0;
+		var $boutons_edit_mode_wikid = $('button.bouton_edit_mode');
+		$boutons_edit_mode_wikid.hide();
+		$boutons_edit_mode_wikid.each(function () {
+			array_colors.push($(this).css('background-color'));
+		});
+//		console.info($toggle_checkbox.button('widget'));
+//		console.info(array_colors);
+		var animate_bg_color = function () {
+			$toggle_checkbox.button('widget').animate({
+				backgroundColor: array_colors[colors_index]}, 2000, 'linear', function () {
+					colors_index = (colors_index === (array_colors.length - 1)) ? 0 : colors_index + 1;
+					if (!$toggle_checkbox.attr('checked')) {
+						animate_bg_color();
+					}
+			});
+		};
+		animate_bg_color();
+		$toggle_checkbox.on('change', function () {
+			$boutons_edit_mode_wikid.toggle('fade');
+			console.info($toggle_checkbox.attr('checked'));
+			if (!$toggle_checkbox.attr('checked')) {
+				animate_bg_color();
+			} else {
+				$toggle_checkbox.button('widget').animate({
+				backgroundColor: 'rgba(0,0,0,0)'}, 'fast', 'linear');
 			}
 		});
 		

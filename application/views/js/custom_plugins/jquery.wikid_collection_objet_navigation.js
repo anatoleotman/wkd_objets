@@ -280,6 +280,7 @@
 					   					+ random_color4 + ')';
 								$(this).css('background', string_couleur_target_rgba);
 							});
+							
 							//console.info(ans.page_nom);
 							//console.info($(this).find('#sommaire_collection_' + ans.page_nom));
 							$(this).find('#sommaire_collection_' + ans.page_nom).accordion({
@@ -287,6 +288,8 @@
 								activeLink: true,
 								expandSub : true
 							});
+							
+							$('.image_overlay', this).img_overlay_effect();
 							$(this).show("slide", {direction: 'right'}, "easeOutQuint", function () {
 							
 							});

@@ -39,4 +39,5 @@ CKEDITOR.stylesSet.add( 'default',
     // Inline styles
     { name : 'Début de chapitre', element : 'p', attributes : { 'class' : 'debut_chapitre' } },
     { name : 'Slideshow', element : 'div', attributes : { 'class' : 'slideshow' } },
+    { name : 'Overlay', element : 'div', attributes : { 'class' : 'image_overlay' } },
 ]);

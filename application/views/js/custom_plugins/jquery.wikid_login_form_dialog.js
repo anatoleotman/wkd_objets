@@ -17,24 +17,21 @@
 	
 		_build_form: function () {	
 			var html_string = [
-	    			'<button id="login_button">Login</button>',
+	    			'<button id="login_button"></button>',
 	    			'<div id="login_form_dialog" class="login_form" title="Login">',
 	    			'<p class="validateTips">All form fields are required.</p>',
 	    			'<form>',
 	    			'<fieldset>',
-	    			'<label for="name">Name</label>',
-	    			'<input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />',
-	    			'<label for="email">Email</label>',
-	    			'<input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />',
-	    			'<label for="password">Password</label>',
-	    			'<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />',
+	    			'<input type="text" name="name" id="name" title="Name" placeholder="Name" class="text ui-widget-content ui-corner-all" />',
+	    			'<input type="email" name="email" id="email" title="Email" placeholder="Email" value="" class="text ui-widget-content ui-corner-all" />',
+	    			'<input type="password" name="password" id="password" title="Password" placeholder="Password" value="" class="text ui-widget-content ui-corner-all" />',
 	    			'</fieldset>',
 	    			'</form>',
 	    			'</div>',
 				].join('');
 			this.$elem_login_wrapper = $('<div>', {
 				id: 'login_wrapper',
-				style: 'font-size:21px'
+				style: 'font-size:24px'
 			});
 			
  
@@ -92,7 +89,7 @@
 					icons: {
 						primary: "ui-icon-locked"
 					},
-					text: true
+					text: false
 				})
 				.click(function() {
 					that.$elem_form_dialog.dialog( "open" );
